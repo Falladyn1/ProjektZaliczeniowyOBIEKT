@@ -1,18 +1,18 @@
 #pragma once
 #include <vector>
-#include "miejsce.h"
-class wagon
+#include "Miejsce.h"
+class Wagon
 {
-private:
+protected:
 	int numerWagonu;
 	int klasa; // 1 lub 2
-	std::vector<miejsce> siedzenia;
+	std::vector<Miejsce> siedzenia;
 public:
-	wagon(int _nr);
-	virtual ~wagon() = default;
+	Wagon(int _nr);
+	virtual ~Wagon() = default;
 
 	virtual void generujMiejsca() = 0;
 	int pobierzNumer() const { return numerWagonu; }
-	std::vector<miejsce>& pobierzMiejsca() { return siedzenia; }
+	std::vector<Miejsce>& pobierzMiejsca() { return siedzenia; }
 };
 

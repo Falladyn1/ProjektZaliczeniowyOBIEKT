@@ -3,7 +3,7 @@
 
 enum class TypMiejsca { OKNO, SRODEK, KORYTARZ };
 
-class miejsce {
+class Miejsce {
 private:
     int numerMiejsca;
     int rzad;          
@@ -14,7 +14,7 @@ private:
     TypMiejsca rodzaj;
 
 public:
-    miejsce(int nr, int rz, char kol, TypMiejsca rodü, bool przedzial, bool stolik);
+    Miejsce(int nr, int rz, char kol, TypMiejsca rodü, bool przedzial, bool stolik);
 
     bool czyWolne() const;
     int pobierzNumer() const;

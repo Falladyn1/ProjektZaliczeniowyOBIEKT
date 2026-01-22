@@ -124,14 +124,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="miejsce.cpp" />
-    <ClCompile Include="pociag.cpp" />
-    <ClCompile Include="wagon.cpp" />
+    <ClCompile Include="Miejsce.cpp" />
+    <ClCompile Include="Pociag.cpp" />
+    <ClCompile Include="Wagon.cpp" />
+    <ClCompile Include="WagonBezprzedzialowy.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="miejsce.h" />
-    <ClInclude Include="pociag.h" />
-    <ClInclude Include="wagon.h" />
+    <ClInclude Include="Miejsce.h" />
+    <ClInclude Include="Pociag.h" />
+    <ClInclude Include="Wagon.h" />
+    <ClInclude Include="WagonBezprzedzialowy.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
