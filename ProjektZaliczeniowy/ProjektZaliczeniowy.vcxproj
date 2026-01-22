@@ -126,13 +126,11 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="miejsce.cpp" />
     <ClCompile Include="pociag.cpp" />
-    <ClCompile Include="stacja.cpp" />
     <ClCompile Include="wagon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="miejsce.h" />
     <ClInclude Include="pociag.h" />
-    <ClInclude Include="stacja.h" />
     <ClInclude Include="wagon.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

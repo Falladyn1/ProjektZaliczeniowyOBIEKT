@@ -1,20 +1,23 @@
 #pragma once
-enum class TypMiejsca {
-	OKNO,
-	KORYTARZ,
-	SRODEK,
-};
+#include <string>
 
-class miejsce{
+enum class TypMiejsca { OKNO, SRODEK, KORYTARZ };
+
+class miejsce {
 private:
-	int numerWagonu;
-	bool dostepnosc = true;
-	bool czyPrzedzial;
-	bool czyStolik;
-	TypMiejsca rodzaj;
+    int numerMiejsca;
+    int rzad;          
+    char kolumna;      
+    bool dostepnosc;
+    bool czyPrzedzial;
+    bool czyStolik;
+    TypMiejsca rodzaj;
+
 public:
-	miejsce(TypMiejsca, bool, bool);
+    miejsce(int nr, int rz, char kol, TypMiejsca rodü, bool przedzial, bool stolik);
 
-	bool pobierzDostepnoscMiejsca();
+    bool czyWolne() const;
+    int pobierzNumer() const;
+    void zarezerwuj();
+    void zwolnij();
 };
-
