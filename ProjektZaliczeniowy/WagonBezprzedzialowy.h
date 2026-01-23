@@ -1,9 +1,8 @@
 #pragma once
-#include "wagon.h"
-class wagonBezprzedzialowy :
-    public Wagon
-{
+#include "Wagon.h"
+
+class wagonBezprzedzialowy : public Wagon {
+public:
     wagonBezprzedzialowy(int _nr, int liczbaRzedow);
     void generujMiejsca();
 };
-
