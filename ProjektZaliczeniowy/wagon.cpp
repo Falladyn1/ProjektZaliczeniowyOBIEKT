@@ -1,6 +1,7 @@
-#include "wagon.h"
+#include "Wagon.h"
 
-Wagon::Wagon(int _nr) {
-	numerWagonu = _nr;
-	klasa = 2;	
+Wagon::Wagon(int _nr, bool _stoliki) {
+    numerWagonu = _nr;
+    czySaStoliki = _stoliki;
+    klasa = 2;
 }
