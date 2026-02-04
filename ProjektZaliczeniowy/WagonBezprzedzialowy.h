@@ -8,6 +8,5 @@ public:
     WagonBezprzedzialowy(int _nr);
 
     void generujMiejsca();
-
     void wyswietlSchemat();
 };

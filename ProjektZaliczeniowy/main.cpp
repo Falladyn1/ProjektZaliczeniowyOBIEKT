@@ -1,24 +1,25 @@
 #include <iostream>
-#include "Pociag.h"
+#include "pociag.h"
 #include "WagonBezprzedzialowy.h"
+#include "WagonPrzedzialowy.h" 
 
 int main() {
-    Pociag express("InterCity Premium");
+    pociag pkp("P1");
 
-    express.dodajWagon(new WagonBezprzedzialowy(1));
+    pkp.dodajWagon(new WagonBezprzedzialowy(1)); // Bezprzedzia³owy
+    pkp.dodajWagon(new WagonPrzedzialowy(2));    // Przedzia³owy
 
-    // Rezerwujemy kilka miejsc, ¿eby zobaczyæ "XX" na schemacie
-    std::cout << "Rezerwuje miejsce 2 (bez stolika)...\n";
-    express.zarezerwuj(1, 2);
+    std::cout << "--- Rezerwacja miejsc ---\n";
 
-    std::cout << "Rezerwuje miejsce 30 (ze stolikiem)...\n";
-    express.zarezerwuj(1, 30);
+    pkp.zarezerwujMiejsce(1, 30);
 
-    std::cout << "Rezerwuje miejsce 31 (ze stolikiem)...\n";
-    express.zarezerwuj(1, 31);
+    pkp.zarezerwujMiejsce(2, 1);
+    pkp.zarezerwujMiejsce(2, 2);
+    pkp.zarezerwujMiejsce(2, 3);
+    pkp.zarezerwujMiejsce(2, 4);
 
-    // Wyœwietlamy piêkny schemat
-    express.pokazWagon(1);
+    pkp.wyswietlWagon(1); 
+    pkp.wyswietlWagon(2);
 
     return 0;
 }

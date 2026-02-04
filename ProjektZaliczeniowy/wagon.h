@@ -8,10 +8,11 @@ protected:
     int numerWagonu;
     int klasa;
     std::vector<Miejsce> siedzenia;
+    
 
 public:
     Wagon(int _nr);
-    virtual ~Wagon() {}
+    virtual ~Wagon() = default;
 
     virtual void generujMiejsca() = 0;
 

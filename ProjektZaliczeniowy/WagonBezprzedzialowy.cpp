@@ -1,74 +1,57 @@
 #include "WagonBezprzedzialowy.h"
 #include <iostream>
-#include <iomanip>
+#include <iomanip> // Do setw
 
-WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr) : Wagon(_nr), liczbaRzedow(20) {
+using namespace std;
+
+WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr) 
+    : Wagon(_nr), liczbaRzedow(20) {
     generujMiejsca();
 }
 
 void WagonBezprzedzialowy::generujMiejsca() {
-    int licznikNumeru = 1;
-
+    int licznik = 1;
     for (int r = 1; r <= liczbaRzedow; ++r) {
+        bool maStolik = (r >= 8 && r <= 11);
 
-        bool czyJestStolik = false;
-
-        if (r >= 8 && r <= 11) {
-            czyJestStolik = true;
-        }
-
-        //A - okno B - korytarz |przejscie| C - korytarz D -okno
-        siedzenia.push_back(Miejsce(licznikNumeru++, r, 'A', TypMiejsca::OKNO, false, czyJestStolik));
-        siedzenia.push_back(Miejsce(licznikNumeru++, r, 'B', TypMiejsca::KORYTARZ, false, czyJestStolik));
-        siedzenia.push_back(Miejsce(licznikNumeru++, r, 'C', TypMiejsca::KORYTARZ, false, czyJestStolik));
-        siedzenia.push_back(Miejsce(licznikNumeru++, r, 'D', TypMiejsca::OKNO, false, czyJestStolik));
-    }
-}
-
-void rysujSiedzenie(const Miejsce& m) {
-    if (m.czyWolne()) {
-        std::cout << "[ " << std::setw(2) << std::setfill('0') << m.pobierzNumer() << " ]";
-    }
-    else {
-        std::cout << "[ XX ]";
+        siedzenia.push_back(Miejsce(licznik++, r, 'A', TypMiejsca::OKNO, false, maStolik));
+        siedzenia.push_back(Miejsce(licznik++, r, 'B', TypMiejsca::KORYTARZ, false, maStolik));
+        siedzenia.push_back(Miejsce(licznik++, r, 'C', TypMiejsca::KORYTARZ, false, maStolik));
+        siedzenia.push_back(Miejsce(licznik++, r, 'D', TypMiejsca::OKNO, false, maStolik));
     }
 }
 
 void WagonBezprzedzialowy::wyswietlSchemat() {
-    std::cout << "\n      SCHEMAT WAGONU NR " << numerWagonu << "\n";
-    std::cout << "      (A)    (B)           (C)    (D)\n";
-    std::cout << "     OKNO  KORYTARZ      KORYTARZ OKNO\n";
-    std::cout << "   +------------------------------------+\n";
-
+    cout << "\n                WAGONU NR " << numerWagonu << "\n";
+    cout << "      (A)    (B)           (C)    (D)\n";
+    cout << "     OKNO  KORYTARZ      KORYTARZ OKNO\n";
+    cout << "   +----------------------------------+\n";
 
     for (int r = 0; r < liczbaRzedow; ++r) {
-        int idx = r * 4;
+        int iloscM = r * 4;
+        int numerRzedu = r + 1;
 
-        std::cout << std::setw(2) << std::setfill(' ') << (r + 1) << " | ";
+        cout << setw(2) << numerRzedu << " | ";
 
-        // Miejsce A
-        rysujSiedzenie(siedzenia[idx]);
-        std::cout << " ";
+        for (int i = 0; i < 4; ++i) {
+            const Miejsce& m = siedzenia[iloscM + i];
 
-        // Miejsce B
-        rysujSiedzenie(siedzenia[idx + 1]);
+            if (m.czyWolne()) {
+                cout << "[ " << setw(2) << setfill('0') << m.pobierzNumer() << " ]";
+            }
+            else {
+                cout << "[ XX ]";
+            }
 
-        if (siedzenia[idx].czyMaStolik()) {
-            std::cout << " _STOL_ ";
+            if (i == 0 || i == 2) cout << " ";
+            if (i == 1) cout << "       "; 
         }
-        else {
-            std::cout << "        "; 
+        cout << "|\n";
+        setfill(' ');
+
+        if (numerRzedu == 8 || numerRzedu == 10) {
+            cout << "   |  __STOLIK__          __STOLIK__  |\n";
         }
-
-        // Miejsce C
-        rysujSiedzenie(siedzenia[idx + 2]);
-        std::cout << " ";
-
-        // Miejsce D
-        rysujSiedzenie(siedzenia[idx + 3]);
-
-        std::cout << " |\n";
     }
-    std::cout << "   +------------------------------------+\n";
-    std::cout << "     LEGENDA: [XX] - Zajete, _STOL_ - Stolik\n\n";
+    cout << "   +----------------------------------+\n";
 }
