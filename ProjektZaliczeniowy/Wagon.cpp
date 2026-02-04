@@ -2,5 +2,5 @@
 
 Wagon::Wagon(int _nr) {
     numerWagonu = _nr;
-    klasa = 2;
+    klasa = 2; // Domyslnie 2 klasa
 }

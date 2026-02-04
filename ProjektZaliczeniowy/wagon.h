@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 #include "Miejsce.h"
 
 class Wagon {
@@ -10,9 +11,11 @@ protected:
 
 public:
     Wagon(int _nr);
-    virtual ~Wagon() = default;
+    virtual ~Wagon() {}
 
     virtual void generujMiejsca() = 0;
+
+    virtual void wyswietlSchemat() = 0;
 
     int pobierzNumer() const { return numerWagonu; }
     std::vector<Miejsce>& pobierzMiejsca() { return siedzenia; }

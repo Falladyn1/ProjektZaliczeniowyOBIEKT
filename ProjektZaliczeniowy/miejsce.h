@@ -8,7 +8,7 @@ private:
     int numerMiejsca;
     int rzad;
     char kolumna;
-    bool dostepnosc;
+    bool dostepnosc;     // true - wolne, false - zajete
     bool czyPrzedzial;
     bool czyStolik;
     TypMiejsca rodzaj;
@@ -20,6 +20,7 @@ public:
     bool czyMaStolik() const;
     int pobierzNumer() const;
     TypMiejsca pobierzRodzaj() const;
+
     void zarezerwuj();
     void zwolnij();
 };

@@ -7,5 +7,7 @@ private:
 public:
     WagonBezprzedzialowy(int _nr);
 
-    void generujMiejsca() override;
+    void generujMiejsca();
+
+    void wyswietlSchemat();
 };
