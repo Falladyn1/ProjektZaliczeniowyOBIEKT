@@ -1,26 +1,24 @@
-#include "pociag.h"
+#include "Pociag.h"
 #include <iostream>
 
 using namespace std;
 
-pociag::pociag(string _nazwa) : nazwa(_nazwa) {}
+Pociag::Pociag(string _nazwa) : nazwa(_nazwa) {}
 
-pociag::~pociag() {
-    // Poniewa¿ u¿ywamy zwyk³ych wskaŸników, musimy rêcznie usun¹æ wagony
+Pociag::~Pociag() {
     for (auto w : wagony) {
         delete w;
     }
     wagony.clear();
 }
 
-void pociag::dodajWagon(Wagon* w) {
+void Pociag::dodajWagon(Wagon* w) {
     wagony.push_back(w);
 }
 
-void pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
+void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
     for (auto w : wagony) {
         if (w->pobierzNumer() == nrWagonu) {
-            // Szukamy miejsca w wektorze siedzeñ wagonu
             for (auto& m : w->pobierzMiejsca()) {
                 if (m.pobierzNumer() == nrMiejsca) {
                     if (m.czyWolne()) {
@@ -38,12 +36,40 @@ void pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
     cout << "Blad: Nie znaleziono wagonu lub miejsca.\n";
 }
 
-void pociag::wyswietlWagon(int nrWagonu) {
+void Pociag::wyswietlWagon(int nrWagonu) {
     for (auto w : wagony) {
         if (w->pobierzNumer() == nrWagonu) {
-            w->wyswietlSchemat(); // Wywo³anie metody rysuj¹cej ASCII Art
+            w->wyswietlSchemat();
             return;
         }
     }
     cout << "Blad: Brak wagonu o numerze " << nrWagonu << ".\n";
+}
+
+string nazwaTypu(TypMiejsca t) {
+    switch (t) {
+    case TypMiejsca::OKNO: return "Przy oknie";
+    case TypMiejsca::KORYTARZ: return "Przy korytarzu";
+    case TypMiejsca::SRODEK: return "Srodek";
+    default: return "-";
+    }
+}
+
+void Pociag::znajdzWolneMiejsce(TypMiejsca typ) {
+    cout << "Szukam wolnego miejsca: " << nazwaTypu(typ) << "...\n";
+    bool znaleziono = false;
+
+    for (auto w : wagony) {
+        for (const auto& m : w->pobierzMiejsca()) {
+            if (m.czyWolne() && m.pobierzRodzaj() == typ) {
+                cout << "Znaleziono! Wagon nr " << w->pobierzNumer()
+                    << ", Miejsce nr " << m.pobierzNumer() << endl;
+                znaleziono = true;
+                // return;
+            }
+        }
+    }
+    if (!znaleziono) {
+        cout << "Niestety, brak wolnych miejsc tego typu.\n";
+    }
 }

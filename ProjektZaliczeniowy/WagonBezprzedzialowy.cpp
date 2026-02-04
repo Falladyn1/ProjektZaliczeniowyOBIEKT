@@ -1,6 +1,6 @@
 #include "WagonBezprzedzialowy.h"
 #include <iostream>
-#include <iomanip> // Do setw
+#include <iomanip> 
 
 using namespace std;
 
@@ -22,9 +22,7 @@ void WagonBezprzedzialowy::generujMiejsca() {
 }
 
 void WagonBezprzedzialowy::wyswietlSchemat() {
-    cout << "\n                WAGONU NR " << numerWagonu << "\n";
-    cout << "      (A)    (B)           (C)    (D)\n";
-    cout << "     OKNO  KORYTARZ      KORYTARZ OKNO\n";
+    cout << "\n                WAGON NR " << numerWagonu << "\n";
     cout << "   +----------------------------------+\n";
 
     for (int r = 0; r < liczbaRzedow; ++r) {
@@ -47,7 +45,7 @@ void WagonBezprzedzialowy::wyswietlSchemat() {
             if (i == 1) cout << "       "; 
         }
         cout << "|\n";
-        setfill(' ');
+        cout << setfill(' ');
 
         if (numerRzedu == 8 || numerRzedu == 10) {
             cout << "   |  __STOLIK__          __STOLIK__  |\n";

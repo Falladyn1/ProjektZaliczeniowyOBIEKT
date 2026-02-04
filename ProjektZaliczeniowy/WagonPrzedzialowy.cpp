@@ -4,56 +4,63 @@
 
 using namespace std;
 
-WagonPrzedzialowy::WagonPrzedzialowy(int _nr) 
-	: Wagon(_nr), liczbaPrzedzialow(10) {
-	generujMiejsca();
+WagonPrzedzialowy::WagonPrzedzialowy(int _nr)
+    : Wagon(_nr), liczbaPrzedzialow(10) {
+    generujMiejsca();
 };
 
 void WagonPrzedzialowy::generujMiejsca() {
-	int licznik = 1;
-	for (int i = 1; i < liczbaPrzedzialow; i++) {
-		siedzenia.push_back(Miejsce(licznik++, i, 'A', TypMiejsca::OKNO, true, false));
-		siedzenia.push_back(Miejsce(licznik++, i, 'B', TypMiejsca::SRODEK, true, false));
-		siedzenia.push_back(Miejsce(licznik++, i, 'C', TypMiejsca::KORYTARZ, true, false));
+    int licznik = 1;
+    for (int i = 0; i < liczbaPrzedzialow; i++) {
+        int nrPrzedzialu = i + 1;
+        siedzenia.push_back(Miejsce(licznik++, nrPrzedzialu, 'A', TypMiejsca::OKNO, true, false));
+        siedzenia.push_back(Miejsce(licznik++, nrPrzedzialu, 'B', TypMiejsca::SRODEK, true, false));
+        siedzenia.push_back(Miejsce(licznik++, nrPrzedzialu, 'C', TypMiejsca::KORYTARZ, true, false));
 
-		siedzenia.push_back(Miejsce(licznik++, i, 'D', TypMiejsca::KORYTARZ, true, false));
-		siedzenia.push_back(Miejsce(licznik++, i, 'E', TypMiejsca::SRODEK, true, false));
-		siedzenia.push_back(Miejsce(licznik++, i, 'F', TypMiejsca::OKNO, true, false));
-	}
+        siedzenia.push_back(Miejsce(licznik++, nrPrzedzialu, 'D', TypMiejsca::KORYTARZ, true, false));
+        siedzenia.push_back(Miejsce(licznik++, nrPrzedzialu, 'E', TypMiejsca::SRODEK, true, false));
+        siedzenia.push_back(Miejsce(licznik++, nrPrzedzialu, 'F', TypMiejsca::OKNO, true, false));
+    }
 }
 
 void WagonPrzedzialowy::wyswietlSchemat() {
-    cout << "\n      SCHEMAT WAGONU PRZEDZIALOWEGO NR " << numerWagonu << "\n";
-    cout << "      _________________________________________\n";
+    cout << "\n                WAGON NR " << numerWagonu << "\n";
+    cout << "   +----------------------------------+\n";
 
     for (int p = 0; p < liczbaPrzedzialow; ++p) {
-        int baseIdx = p * 8; // 8 miejsc na przedzia³
+        int liczbaM = p * 6; // 6 miejsc w przedziale
+        int nrP = p + 1;
 
-        cout << "     | PRZEDZIAL NR " << setw(2) << (p + 1) << "                       |\n";
-        cout << "     | ";
-
-        for (int i = 0; i < 4; ++i) {
-            const Miejsce& m = siedzenia[baseIdx + i];
+        cout << setw(2) << nrP << " | ";
+        for (int i = 0; i < 3; ++i) {
+            const Miejsce& m = siedzenia[liczbaM + i];
             if (m.czyWolne())
-                cout << "[" << setw(2) << setfill('0') << m.pobierzNumer() << "]";
+                cout << "[ " << setw(2) << setfill('0') << m.pobierzNumer() << " ]";
             else
-                cout << "[XX]";
+                cout << "[ XX ]";
+            if (i < 2) cout << " ";
         }
         cout << " |\n";
 
-        cout << "     | ";
-        for (int i = 4; i < 8; ++i) {
-            const Miejsce& m = siedzenia[baseIdx + i];
+        cout << "   |                                  |\n";
+
+        cout << "   | ";
+        int indeksy[] = { 5, 4, 3 };
+        for (int i = 0; i < 3; ++i) {
+            const Miejsce& m = siedzenia[liczbaM + indeksy[i]];
             if (m.czyWolne())
-                cout << "[" << setw(2) << setfill('0') << m.pobierzNumer() << "]";
+                cout << "[ " << setw(2) << setfill('0') << m.pobierzNumer() << " ]";
             else
-                cout << "[XX]";
+                cout << "[ XX ]";
+            if (i < 2) cout << " ";
         }
         cout << " |\n";
-        cout << "     |_________________________________________|\n";
+
+        if (p < liczbaPrzedzialow - 1)
+            cout << "   |----------------------------------|\n";
     }
-
-    cout << "     |                                         |\n";
-    cout << "     |                KORYTARZ                 |\n";
-    cout << "     |_________________________________________|\n\n";
+    cout << "   +----------------------------------+\n";
+    cout << "   |            KORYTARZ              |\n";
+    cout << "   +----------------------------------+\n";
+    cout << setfill(' ');
 }

@@ -3,16 +3,18 @@
 #include <string>
 #include "Wagon.h"
 
-class pociag {
+class Pociag {
 private:
     std::string nazwa;
     std::vector<Wagon*> wagony;
 
 public:
-    pociag(std::string _nazwa);
-    ~pociag();
+    Pociag(std::string _nazwa);
+    ~Pociag();
 
     void dodajWagon(Wagon* w);
     void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
     void wyswietlWagon(int nrWagonu);
+
+    void znajdzWolneMiejsce(TypMiejsca typ);
 };
