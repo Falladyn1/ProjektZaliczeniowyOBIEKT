@@ -1,31 +1,10 @@
 #include "WagonBezprzedzialowy.h"
 
-wagonBezprzedzialowy::wagonBezprzedzialowy(int _nr, bool _stoliki, int _rzedy)
-    : Wagon(_nr, _stoliki), liczbaRzedow(20)
-{ 
+WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr): liczbaRzedow(20){
+    numerWagonu = _nr;
     generujMiejsca();
 }
 
-void wagonBezprzedzialowy::generujMiejsca() {
-    int nrMiejsca = 1;
+void WagonBezprzedzialowy::generujMiejsca() {
     
-    for (int rz = 1; rz <= liczbaRzedow; rz++) {
-        if (rz == 9 || rz == 11)
-            continue;
-
-        char kolumny[] = { 'A','B','C','D' };
-
-        for (char kol : kolumny) {
-            TypMiejsca rodzaj = (kol == 'A' || kol == 'D') ? TypMiejsca::OKNO : TypMiejsca::KORYTARZ;
-
-            siedzenia.push_back(Miejsce(
-                nrMiejsca++,
-                rz,
-                kol,
-                rodzaj,
-                false, // czyPrzedzial
-                czySaStoliki //czyStolik
-            ));
-        }
-    }
 }

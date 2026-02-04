@@ -1,11 +1,11 @@
 #pragma once
 #include "Wagon.h"
 
-class wagonBezprzedzialowy : public Wagon {
+class WagonBezprzedzialowy : public Wagon {
 private:
     int liczbaRzedow;
 public:
-    wagonBezprzedzialowy(int _nr, bool _stoliki, int _rzedy);
+    WagonBezprzedzialowy(int _nr);
 
-    void generujMiejsca();
+    void generujMiejsca() override;
 };
