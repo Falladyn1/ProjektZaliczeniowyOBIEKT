@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Miejsce.cpp" />
+    <ClCompile Include="Pasazer.cpp" />
     <ClCompile Include="Pociag.cpp" />
     <ClCompile Include="Wagon.cpp" />
     <ClCompile Include="WagonBezprzedzialowy.cpp" />
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Miejsce.h" />
+    <ClInclude Include="Pasazer.h" />
     <ClInclude Include="Pociag.h" />
     <ClInclude Include="Wagon.h" />
     <ClInclude Include="WagonBezprzedzialowy.h" />

@@ -2,5 +2,6 @@
 
 Wagon::Wagon(int _nr) {
     numerWagonu = _nr;
-    klasa = 2; // Domyslnie 2 klasa
+    klasa = 2;
+    cenaZaMiejsce = 50.0;
 }

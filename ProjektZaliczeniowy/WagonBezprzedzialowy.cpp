@@ -1,11 +1,13 @@
 #include "WagonBezprzedzialowy.h"
 #include <iostream>
-#include <iomanip> 
+#include <iomanip>
 
 using namespace std;
 
-WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr) 
+WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr)
     : Wagon(_nr), liczbaRzedow(20) {
+    klasa = 2;
+    cenaZaMiejsce = 60.00;
     generujMiejsca();
 }
 
@@ -14,15 +16,15 @@ void WagonBezprzedzialowy::generujMiejsca() {
     for (int r = 1; r <= liczbaRzedow; ++r) {
         bool maStolik = (r >= 8 && r <= 11);
 
-        siedzenia.push_back(Miejsce(licznik++, r, 'A', TypMiejsca::OKNO, false, maStolik));
-        siedzenia.push_back(Miejsce(licznik++, r, 'B', TypMiejsca::KORYTARZ, false, maStolik));
-        siedzenia.push_back(Miejsce(licznik++, r, 'C', TypMiejsca::KORYTARZ, false, maStolik));
-        siedzenia.push_back(Miejsce(licznik++, r, 'D', TypMiejsca::OKNO, false, maStolik));
+        siedzenia.push_back(Miejsce(licznik++, r, 'A', TypMiejsca::OKNO, false, maStolik, cenaZaMiejsce));
+        siedzenia.push_back(Miejsce(licznik++, r, 'B', TypMiejsca::KORYTARZ, false, maStolik, cenaZaMiejsce));
+        siedzenia.push_back(Miejsce(licznik++, r, 'C', TypMiejsca::KORYTARZ, false, maStolik, cenaZaMiejsce));
+        siedzenia.push_back(Miejsce(licznik++, r, 'D', TypMiejsca::OKNO, false, maStolik, cenaZaMiejsce));
     }
 }
 
 void WagonBezprzedzialowy::wyswietlSchemat() {
-    cout << "\n                WAGON NR " << numerWagonu << "\n";
+    cout << "\n                WAGON NR " << numerWagonu << " (Bezprzedzialowy, Cena podst: " << cenaZaMiejsce << " zl)\n";
     cout << "   +----------------------------------+\n";
 
     for (int r = 0; r < liczbaRzedow; ++r) {
@@ -33,16 +35,11 @@ void WagonBezprzedzialowy::wyswietlSchemat() {
 
         for (int i = 0; i < 4; ++i) {
             const Miejsce& m = siedzenia[iloscM + i];
-
-            if (m.czyWolne()) {
-                cout << "[ " << setw(2) << setfill('0') << m.pobierzNumer() << " ]";
-            }
-            else {
-                cout << "[ XX ]";
-            }
+            if (m.czyWolne()) cout << "[ " << setw(2) << setfill('0') << m.pobierzNumer() << " ]";
+            else cout << "[ XX ]";
 
             if (i == 0 || i == 2) cout << " ";
-            if (i == 1) cout << "       "; 
+            if (i == 1) cout << "       ";
         }
         cout << "|\n";
         cout << setfill(' ');
