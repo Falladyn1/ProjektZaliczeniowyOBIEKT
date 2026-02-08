@@ -8,7 +8,7 @@ private:
     int numerMiejsca;
     TypMiejsca rodzaj;
     double cenaBazowa;
-    Pasazer* pasazer; // Wskaznik na pasazera
+    Pasazer* pasazer;
 
 public:
     Miejsce(int nr, TypMiejsca r, double cena);
@@ -18,7 +18,6 @@ public:
     int pobierzNumer() const;
     TypMiejsca pobierzRodzaj() const;
     Pasazer* pobierzPasazera() const;
-
     double obliczCeneKoncowa() const;
 
     void zarezerwuj(Pasazer* p);

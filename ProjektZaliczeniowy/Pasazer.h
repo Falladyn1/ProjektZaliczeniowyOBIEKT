@@ -19,6 +19,7 @@ public:
 
     std::string pobierzImie() const;
     std::string pobierzNazwisko() const;
+    TypUlgi pobierzUlge() const;
     double pobierzMnoznikCeny() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Pasazer& p);

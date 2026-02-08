@@ -1,10 +1,11 @@
 #include "WagonPrzedzialowy.h"
+#include "Wyjatki.h"
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
-WagonPrzedzialowy::WagonPrzedzialowy(int _nr)
-    : Wagon(_nr, 100.0) {
+WagonPrzedzialowy::WagonPrzedzialowy(int _nr) : Wagon(_nr, 100.0) {
     generujMiejsca();
 }
 
@@ -12,12 +13,46 @@ void WagonPrzedzialowy::generujMiejsca() {
     for (int i = 1; i <= 30; ++i) {
         TypMiejsca typ = TypMiejsca::SRODEK;
         if (i % 6 == 1 || i % 6 == 0) typ = TypMiejsca::OKNO;
-
         siedzenia.push_back(Miejsce(i, typ, cenaZaMiejsce));
     }
 }
 
 void WagonPrzedzialowy::wyswietlSchemat() {
-    cout << "\n--- WAGON PRZEDZIALOWY NR " << numerWagonu << " (Klasa 1) ---\n";
-    cout << "Uklad: [OKNO SRODEK SRODEK ...]\n";
+    cout << "Wagon " << numerWagonu << " (Przedzialowy):\n";
+    int iloscPrzedzialow = siedzenia.size() / 6;
+
+    for (int p = 0; p < iloscPrzedzialow; ++p) {
+        int start = p * 6;
+        cout << " P" << p + 1 << " ";
+
+        // Miejsca 1, 2, 3
+        for (int i = 0; i < 3; ++i) {
+            int idx = start + i;
+            if (siedzenia[idx].czyWolne()) {
+                ustawKolor(KOLOR_ZIELONY);
+                cout << "[" << setw(2) << siedzenia[idx].pobierzNumer() << "]";
+            }
+            else {
+                ustawKolor(KOLOR_CZERWONY);
+                cout << "[XX]";
+            }
+            ustawKolor(KOLOR_RESET);
+        }
+        cout << "\n    ";
+
+        // Miejsca 6, 5, 4 (naprzeciwko)
+        for (int i = 5; i >= 3; --i) {
+            int idx = start + i;
+            if (siedzenia[idx].czyWolne()) {
+                ustawKolor(KOLOR_ZIELONY);
+                cout << "[" << setw(2) << siedzenia[idx].pobierzNumer() << "]";
+            }
+            else {
+                ustawKolor(KOLOR_CZERWONY);
+                cout << "[XX]";
+            }
+            ustawKolor(KOLOR_RESET);
+        }
+        cout << "\n\n";
+    }
 }

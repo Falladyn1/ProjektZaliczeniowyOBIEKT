@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "Pociag.h"
 #include "WagonBezprzedzialowy.h"
 #include "WagonPrzedzialowy.h"
@@ -6,26 +7,41 @@
 
 using namespace std;
 
+void wyczyscEkran() {
+#ifdef _WIN32
+    system("cls");
+#else
+    system("clear");
+#endif
+}
+
 int main() {
-    // Tworzenie pociagu
     Pociag interCity("Kopernik");
+    interCity.dodajWagon(new WagonBezprzedzialowy(1));
+    interCity.dodajWagon(new WagonPrzedzialowy(2));
 
-    // Dodawanie wagonow
-    interCity.dodajWagon(new WagonBezprzedzialowy(1)); // Wagon nr 1
-    interCity.dodajWagon(new WagonPrzedzialowy(2));    // Wagon nr 2
+    int opcja = -1;
+    string komunikat = "";
 
-    int opcja;
     do {
-        cout << "\n=== SYSTEM REZERWACJI PKP ===\n";
-        cout << "1. Zarezerwuj miejsce\n";
-        cout << "2. Lista pasazerow\n";
-        cout << "0. Wyjscie\n";
-        cout << "Wybierz opcje: ";
+        wyczyscEkran();
+
+        // 1. Wyœwietlanie stanu poci¹gu (nowy, czysty wygl¹d)
+        interCity.pokazPodgladPociagu();
+
+        // 2. Proste powiadomienia i menu
+        if (!komunikat.empty()) {
+            cout << "\n>> " << komunikat << "\n";
+            komunikat = "";
+        }
+
+        cout << "\n1. Rezerwuj miejsce";
+        cout << "\n2. Lista pasazerow";
+        cout << "\n0. Wyjscie";
+        cout << "\n> ";
 
         if (!(cin >> opcja)) {
-            cout << "To nie jest liczba!\n";
-            cin.clear();
-            cin.ignore(1000, '\n');
+            cin.clear(); cin.ignore(1000, '\n');
             continue;
         }
 
@@ -33,33 +49,26 @@ int main() {
             switch (opcja) {
             case 1: {
                 int w, m;
-                cout << "Podaj numer wagonu (1 lub 2): "; cin >> w;
-                cout << "Podaj numer miejsca: "; cin >> m;
-                // Proba rezerwacji moze rzucic wyjatek
+                cout << "Nr wagonu: "; cin >> w;
+                cout << "Nr miejsca: "; cin >> m;
                 interCity.zarezerwujMiejsce(w, m);
+                komunikat = "Zarezerwowano.";
                 break;
             }
             case 2:
+                wyczyscEkran();
                 interCity.wyswietlListePasazerow();
+                cout << "\n[Enter] powrot...";
+                cin.ignore(); cin.get();
                 break;
             case 0:
-                cout << "Zamykanie programu...\n";
                 break;
             default:
-                cout << "Nieznana opcja.\n";
+                komunikat = "Nieznana opcja.";
             }
         }
-        catch (const MiejsceZajeteException& e) {
-            cerr << "[BLAD] " << e.what() << endl;
-        }
-        catch (const NieznalezionoElementuException& e) {
-            cerr << "[BLAD] " << e.what() << endl;
-        }
-        catch (const BledneDaneException& e) {
-            cerr << "[BLAD] " << e.what() << endl;
-        }
-        catch (...) {
-            cerr << "[BLAD] Wystapil nieznany blad.\n";
+        catch (const std::exception& e) {
+            komunikat = e.what();
         }
 
     } while (opcja != 0);

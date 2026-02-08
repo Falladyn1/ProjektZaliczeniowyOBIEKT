@@ -1,20 +1,29 @@
 #pragma once
 #include <stdexcept>
 #include <string>
+#include <windows.h> // Biblioteka do kolorow w konsoli Windows
 
-// Wyj¹tek rzucany, gdy ktoœ chce usi¹œæ na zajêtym miejscu
+// Definicje kolorow
+#define KOLOR_RESET   7
+#define KOLOR_ZIELONY 10
+#define KOLOR_CZERWONY 12
+#define KOLOR_ZOLTY   14
+
+inline void ustawKolor(int k) {
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, k);
+}
+
 class MiejsceZajeteException : public std::runtime_error {
 public:
     MiejsceZajeteException(int nr) : std::runtime_error("Blad: Miejsce " + std::to_string(nr) + " jest juz zajete!") {}
 };
 
-// Gdy u¿ytkownik wpisze np. literê zamiast cyfry
 class BledneDaneException : public std::runtime_error {
 public:
     BledneDaneException() : std::runtime_error("Blad: Podano nieprawidlowe dane wejsciowe.") {}
 };
 
-// Gdy szukamy wagonu/miejsca, którego nie ma w poci¹gu
 class NieznalezionoElementuException : public std::runtime_error {
 public:
     NieznalezionoElementuException(std::string msg) : std::runtime_error("Blad: " + msg) {}

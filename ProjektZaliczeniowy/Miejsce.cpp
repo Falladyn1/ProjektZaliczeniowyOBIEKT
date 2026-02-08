@@ -5,26 +5,16 @@ Miejsce::Miejsce(int nr, TypMiejsca r, double cena)
 }
 
 Miejsce::~Miejsce() {
-    if (pasazer != nullptr) {
-        delete pasazer;
-    }
+    if (pasazer != nullptr) delete pasazer;
 }
 
 bool Miejsce::czyWolne() const {
     return pasazer == nullptr;
 }
 
-int Miejsce::pobierzNumer() const {
-    return numerMiejsca;
-}
-
-TypMiejsca Miejsce::pobierzRodzaj() const {
-    return rodzaj;
-}
-
-Pasazer* Miejsce::pobierzPasazera() const {
-    return pasazer;
-}
+int Miejsce::pobierzNumer() const { return numerMiejsca; }
+TypMiejsca Miejsce::pobierzRodzaj() const { return rodzaj; }
+Pasazer* Miejsce::pobierzPasazera() const { return pasazer; }
 
 double Miejsce::obliczCeneKoncowa() const {
     if (czyWolne()) return cenaBazowa;
