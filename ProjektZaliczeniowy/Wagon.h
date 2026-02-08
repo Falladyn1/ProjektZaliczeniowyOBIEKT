@@ -6,12 +6,11 @@
 class Wagon {
 protected:
     int numerWagonu;
-    int klasa;
     double cenaZaMiejsce;
     std::vector<Miejsce> siedzenia;
 
 public:
-    Wagon(int _nr);
+    Wagon(int nr, double cena);
     virtual ~Wagon() = default;
 
     virtual void generujMiejsca() = 0;

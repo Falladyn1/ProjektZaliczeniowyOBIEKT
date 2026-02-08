@@ -1,32 +1,34 @@
 #include "Miejsce.h"
 
-Miejsce::Miejsce(int nr, int rz, char kol, TypMiejsca rodz, bool przedzial, bool stolik)
-    : numerMiejsca(nr), rzad(rz), kolumna(kol), rodzaj(rodz),
-    czyPrzedzial(przedzial), czyStolik(stolik), dostepnosc(true) {
+Miejsce::Miejsce(int nr, TypMiejsca r, double cena)
+    : numerMiejsca(nr), rodzaj(r), cenaBazowa(cena), pasazer(nullptr) {
+}
+
+Miejsce::~Miejsce() {
+    if (pasazer != nullptr) delete pasazer;
 }
 
 bool Miejsce::czyWolne() const {
-    return dostepnosc;
+    return pasazer == nullptr;
 }
 
-bool Miejsce::czyMaStolik() const {
-    return czyStolik;
+int Miejsce::pobierzNumer() const { return numerMiejsca; }
+TypMiejsca Miejsce::pobierzRodzaj() const { return rodzaj; }
+Pasazer* Miejsce::pobierzPasazera() const { return pasazer; }
+
+double Miejsce::obliczCeneKoncowa() const {
+    if (czyWolne()) return cenaBazowa;
+    return cenaBazowa * pasazer->pobierzMnoznikCeny();
 }
 
-int Miejsce::pobierzNumer() const {
-    return numerMiejsca;
-}
-
-TypMiejsca Miejsce::pobierzRodzaj() const {
-    return rodzaj;
-}
-
-void Miejsce::zarezerwuj() {
-    if (dostepnosc) {
-        dostepnosc = false;
-    }
+void Miejsce::zarezerwuj(Pasazer* p) {
+    if (pasazer != nullptr) delete pasazer;
+    pasazer = p;
 }
 
 void Miejsce::zwolnij() {
-    dostepnosc = true;
+    if (pasazer != nullptr) {
+        delete pasazer;
+        pasazer = nullptr;
+    }
 }

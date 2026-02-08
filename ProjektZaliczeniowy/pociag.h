@@ -13,8 +13,16 @@ public:
     ~Pociag();
 
     void dodajWagon(Wagon* w);
-    void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
-    void wyswietlWagon(int nrWagonu);
 
-    void znajdzWolneMiejsce(TypMiejsca typ);
+    // Kluczowe funkcje
+    void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
+    void anulujRezerwacje(int nrWagonu, int nrMiejsca);
+    void znajdzWolneMiejsce(int tryb); // 1-Okno, 2-Korytarz
+
+    void wyswietlListePasazerow();
+    void pokazPodgladPociagu();
+
+    // Obsluga plikow
+    void zapiszStanDoPliku();
+    void wczytajStanZPliku();
 };

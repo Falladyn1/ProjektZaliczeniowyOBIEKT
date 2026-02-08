@@ -1,26 +1,25 @@
 #pragma once
-#include <string>
+#include "Pasazer.h"
 
 enum class TypMiejsca { OKNO, SRODEK, KORYTARZ };
 
 class Miejsce {
 private:
     int numerMiejsca;
-    int rzad;
-    char kolumna;
-    bool dostepnosc;     // true - wolne, false - zajete
-    bool czyPrzedzial;
-    bool czyStolik;
     TypMiejsca rodzaj;
+    double cenaBazowa;
+    Pasazer* pasazer;
 
 public:
-    Miejsce(int nr, int rz, char kol, TypMiejsca rodz, bool przedzial, bool stolik);
+    Miejsce(int nr, TypMiejsca r, double cena);
+    ~Miejsce();
 
     bool czyWolne() const;
-    bool czyMaStolik() const;
     int pobierzNumer() const;
     TypMiejsca pobierzRodzaj() const;
+    Pasazer* pobierzPasazera() const;
+    double obliczCeneKoncowa() const;
 
-    void zarezerwuj();
+    void zarezerwuj(Pasazer* p);
     void zwolnij();
 };
