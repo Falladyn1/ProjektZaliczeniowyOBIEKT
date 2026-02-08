@@ -19,11 +19,14 @@ private:
 public:
     Pasazer(string i, string n, TypUlgi u);
 
+    // Gettery
     string pobierzImie() const;
     string pobierzNazwisko() const;
-    string pobierzInfoUlgi() const;
-
     double pobierzMnoznikCeny() const;
 
-    string pobierzPelneInfo() const;
+    // Przeciazenie operatora ==
+    bool operator==(const Pasazer& inny) const;
+
+    // Funkcja zaprzyjazniona (FRIEND) do wypisywania
+    friend ostream& operator<<(ostream& os, const Pasazer& p);
 };

@@ -3,14 +3,11 @@
 Miejsce::Miejsce(int nr, int rz, char kol, TypMiejsca rodz, bool przedzial, bool stolik, double cena)
     : numerMiejsca(nr), rzad(rz), kolumna(kol), rodzaj(rodz),
     czyPrzedzial(przedzial), czyStolik(stolik), cenaBazowa(cena) {
-
     pasazer = nullptr;
 }
 
 Miejsce::~Miejsce() {
-    if (pasazer != nullptr) {
-        delete pasazer;
-    }
+    if (pasazer != nullptr) delete pasazer;
 }
 
 bool Miejsce::czyWolne() const {
@@ -25,9 +22,8 @@ double Miejsce::obliczCeneKoncowa() const {
     return cenaBazowa * pasazer->pobierzMnoznikCeny();
 }
 
-string Miejsce::pobierzInfoPasazera() const {
-    if (czyWolne()) return "Wolne";
-    return pasazer->pobierzPelneInfo();
+Pasazer* Miejsce::pobierzPasazera() const {
+    return pasazer;
 }
 
 void Miejsce::zarezerwuj(Pasazer* nowyPasazer) {

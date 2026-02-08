@@ -12,10 +12,10 @@ public:
     Pociag(std::string _nazwa);
     ~Pociag();
 
-    void dodajWagon(Wagon* w);
-    void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
+    Pociag& operator+=(Wagon* w);
+
+    Pasazer* zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
+
     void wyswietlWagon(int nrWagonu);
     void znajdzWolneMiejsce(TypMiejsca typ);
-
-    void wyswietlListePasazerow();
 };

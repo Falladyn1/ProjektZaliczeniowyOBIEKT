@@ -7,14 +7,6 @@ Pasazer::Pasazer(string i, string n, TypUlgi u)
 string Pasazer::pobierzImie() const { return imie; }
 string Pasazer::pobierzNazwisko() const { return nazwisko; }
 
-string Pasazer::pobierzInfoUlgi() const {
-    switch (ulga) {
-    case TypUlgi::STUDENT: return "Student (-51%)";
-    case TypUlgi::SENIOR: return "Senior (-30%)";
-    default: return "Normalny";
-    }
-}
-
 double Pasazer::pobierzMnoznikCeny() const {
     switch (ulga) {
     case TypUlgi::STUDENT: return 0.49;
@@ -23,6 +15,16 @@ double Pasazer::pobierzMnoznikCeny() const {
     }
 }
 
-string Pasazer::pobierzPelneInfo() const {
-    return imie + " " + nazwisko + " (" + pobierzInfoUlgi() + ")";
+bool Pasazer::operator==(const Pasazer& inny) const {
+    return (this->imie == inny.imie && this->nazwisko == inny.nazwisko);
+}
+
+ostream& operator<<(ostream& os, const Pasazer& p) {
+    os << p.imie << " " << p.nazwisko;
+    switch (p.ulga) {
+    case TypUlgi::STUDENT: os << " (Student -51%)"; break;
+    case TypUlgi::SENIOR:  os << " (Senior -30%)"; break;
+    default:               os << " (Normalny)"; break;
+    }
+    return os;
 }

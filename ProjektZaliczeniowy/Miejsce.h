@@ -12,7 +12,7 @@ private:
     bool czyStolik;
     TypMiejsca rodzaj;
 
-    double cenaBazowa; 
+    double cenaBazowa;
     Pasazer* pasazer;
 
 public:
@@ -24,7 +24,9 @@ public:
     TypMiejsca pobierzRodzaj() const;
 
     double obliczCeneKoncowa() const;
-    string pobierzInfoPasazera() const;
+
+    // Zwraca wskaznik na pasazera (potrzebne do rejestru)
+    Pasazer* pobierzPasazera() const;
 
     void zarezerwuj(Pasazer* nowyPasazer);
     void zwolnij();

@@ -7,15 +7,14 @@ class Wagon {
 protected:
     int numerWagonu;
     int klasa;
+    double cenaZaMiejsce;
     std::vector<Miejsce> siedzenia;
-    
 
 public:
     Wagon(int _nr);
     virtual ~Wagon() = default;
 
     virtual void generujMiejsca() = 0;
-
     virtual void wyswietlSchemat() = 0;
 
     int pobierzNumer() const { return numerWagonu; }
