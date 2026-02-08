@@ -2,31 +2,24 @@
 #include <string>
 #include <iostream>
 
-using namespace std;
-
 enum class TypUlgi {
     NORMALNY,
-    STUDENT, // -51%
-    SENIOR   // -30%
+    STUDENT,
+    SENIOR
 };
 
 class Pasazer {
 private:
-    string imie;
-    string nazwisko;
+    std::string imie;
+    std::string nazwisko;
     TypUlgi ulga;
 
 public:
-    Pasazer(string i, string n, TypUlgi u);
+    Pasazer(std::string i, std::string n, TypUlgi u);
 
-    // Gettery
-    string pobierzImie() const;
-    string pobierzNazwisko() const;
+    std::string pobierzImie() const;
+    std::string pobierzNazwisko() const;
     double pobierzMnoznikCeny() const;
 
-    // Przeciazenie operatora ==
-    bool operator==(const Pasazer& inny) const;
-
-    // Funkcja zaprzyjazniona (FRIEND) do wypisywania
-    friend ostream& operator<<(ostream& os, const Pasazer& p);
+    friend std::ostream& operator<<(std::ostream& os, const Pasazer& p);
 };

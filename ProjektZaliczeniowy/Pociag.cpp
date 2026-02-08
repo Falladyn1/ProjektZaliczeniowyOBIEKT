@@ -1,91 +1,92 @@
 #include "Pociag.h"
 #include "Wyjatki.h"
 #include <iostream>
-#include <iomanip>
 
 using namespace std;
 
 Pociag::Pociag(string _nazwa) : nazwa(_nazwa) {}
 
 Pociag::~Pociag() {
-    for (auto w : wagony) delete w;
+    // Musimy usunac wagony bo byly tworzone przez new
+    for (auto w : wagony) {
+        delete w;
+    }
     wagony.clear();
 }
 
-// Przeciazenie operatora +=
 Pociag& Pociag::operator+=(Wagon* w) {
     wagony.push_back(w);
-    cout << ">> Dolaczono wagon nr " << w->pobierzNumer() << " do pociagu " << nazwa << ".\n";
+    cout << ">> Dodano wagon nr " << w->pobierzNumer() << " do pociagu.\n";
     return *this;
 }
 
-Pasazer* Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
+void Pociag::dodajWagon(Wagon* w) {
+    *this += w; // Wywolujemy operator +=
+}
+
+void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
     bool znalezionoWagon = false;
 
     for (auto w : wagony) {
         if (w->pobierzNumer() == nrWagonu) {
             znalezionoWagon = true;
+
+            // Szukamy miejsca w wagonie
             for (auto& m : w->pobierzMiejsca()) {
                 if (m.pobierzNumer() == nrMiejsca) {
 
                     if (!m.czyWolne()) {
-                        // RZUCENIE WYJATKU
                         throw MiejsceZajeteException(nrMiejsca);
                     }
 
-                    // Pobieranie danych (logika interfejsu tutaj dla uproszczenia)
-                    cout << "--- REZERWACJA MIEJSCA " << nrMiejsca << " ---\n";
+                    // Skoro wolne, to pytamy o dane
                     string imie, nazwisko;
-                    int typ;
+                    int wyborUlgi;
                     cout << "Podaj imie: "; cin >> imie;
                     cout << "Podaj nazwisko: "; cin >> nazwisko;
-                    cout << "Wybierz ulge (1-Student, 2-Senior, inne-Normalny): ";
+                    cout << "Typ znizki (1-Student, 2-Senior, inne-Normalny): ";
 
-                    if (!(cin >> typ)) {
+                    if (!(cin >> wyborUlgi)) {
                         cin.clear(); cin.ignore(1000, '\n');
                         throw BledneDaneException();
                     }
 
                     TypUlgi ulga = TypUlgi::NORMALNY;
-                    if (typ == 1) ulga = TypUlgi::STUDENT;
-                    else if (typ == 2) ulga = TypUlgi::SENIOR;
+                    if (wyborUlgi == 1) ulga = TypUlgi::STUDENT;
+                    else if (wyborUlgi == 2) ulga = TypUlgi::SENIOR;
 
-                    Pasazer* p = new Pasazer(imie, nazwisko, ulga);
-                    m.zarezerwuj(p);
+                    // Rezerwujemy
+                    Pasazer* nowyPasazer = new Pasazer(imie, nazwisko, ulga);
+                    m.zarezerwuj(nowyPasazer);
 
-                    return p; // Zwracamy wskaznik, by main mogl go dodac do Rejestru
+                    cout << "Sukces! Zarezerwowano miejsce.\n";
+                    return;
                 }
             }
-            throw NieznalezionoElementuException("Nie ma miejsca nr " + to_string(nrMiejsca) + " w tym wagonie.");
+            throw NieznalezionoElementuException("Brak miejsca nr " + to_string(nrMiejsca) + " w wagonie " + to_string(nrWagonu));
         }
     }
 
     if (!znalezionoWagon) {
-        throw NieznalezionoElementuException("Nie ma wagonu nr " + to_string(nrWagonu));
+        throw NieznalezionoElementuException("Brak wagonu nr " + to_string(nrWagonu));
     }
-    return nullptr;
 }
 
-void Pociag::wyswietlWagon(int nrWagonu) {
-    for (auto w : wagony) {
-        if (w->pobierzNumer() == nrWagonu) {
-            w->wyswietlSchemat();
-            return;
-        }
-    }
-    cout << "Blad: Brak wagonu o numerze " << nrWagonu << ".\n";
-}
+void Pociag::wyswietlListePasazerow() {
+    cout << "\n--- LISTA PASAZEROW POCIAGU " << nazwa << " ---\n";
+    bool pusty = true;
 
-void Pociag::znajdzWolneMiejsce(TypMiejsca typ) {
-    cout << "Szukam wolnego miejsca...\n";
-    bool znaleziono = false;
     for (auto w : wagony) {
         for (const auto& m : w->pobierzMiejsca()) {
-            if (m.czyWolne() && m.pobierzRodzaj() == typ) {
-                cout << "Wolne: Wagon " << w->pobierzNumer() << ", Miejsce " << m.pobierzNumer() << endl;
-                znaleziono = true;
+            if (!m.czyWolne()) {
+                pusty = false;
+                cout << "Wagon " << w->pobierzNumer()
+                    << " | Miejsce " << m.pobierzNumer() << " | ";
+                cout << *(m.pobierzPasazera()); // Uzycie operatora << z Pasazer.h
+                cout << " | Cena: " << m.obliczCeneKoncowa() << " PLN\n";
             }
         }
     }
-    if (!znaleziono) cout << "Brak miejsc tego typu.\n";
+
+    if (pusty) cout << "(Pociag jest pusty)\n";
 }

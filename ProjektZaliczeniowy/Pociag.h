@@ -6,7 +6,7 @@
 class Pociag {
 private:
     std::string nazwa;
-    std::vector<Wagon*> wagony;
+    std::vector<Wagon*> wagony; // Wektor wskaznikow na wagony
 
 public:
     Pociag(std::string _nazwa);
@@ -14,8 +14,9 @@ public:
 
     Pociag& operator+=(Wagon* w);
 
-    Pasazer* zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
+    void dodajWagon(Wagon* w);
 
-    void wyswietlWagon(int nrWagonu);
-    void znajdzWolneMiejsce(TypMiejsca typ);
+    void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
+
+    void wyswietlListePasazerow();
 };

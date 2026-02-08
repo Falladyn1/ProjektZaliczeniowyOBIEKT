@@ -1,68 +1,65 @@
 #include <iostream>
-#include "pociag.h"
+#include "Pociag.h"
 #include "WagonBezprzedzialowy.h"
 #include "WagonPrzedzialowy.h"
+#include "Wyjatki.h"
 
 using namespace std;
 
-void wyswietlMenu() {
-    cout << "\n=== SYSTEM REZERWACJI PKP ===\n";
-    cout << "1. Wyswietl schemat wagonu\n";
-    cout << "2. Zarezerwuj miejsce (Tworzenie pasazera)\n";
-    cout << "3. Znajdz wolne miejsce (wg typu)\n";
-    cout << "4. Lista pasazerow\n";
-    cout << "0. Wyjscie\n";
-    cout << "Wybierz opcje: ";
-}
-
 int main() {
-    Pociag pkp("InterCity Kopernik");
+    // Tworzenie pociagu
+    Pociag interCity("Kopernik");
 
-    // Dodajemy wagony (1 - bezprzedzialowy 2 klasa, 2 - przedzialowy 1 klasa)
-    pkp.dodajWagon(new WagonBezprzedzialowy(1));
-    pkp.dodajWagon(new WagonPrzedzialowy(2));
+    // Dodawanie wagonow
+    interCity.dodajWagon(new WagonBezprzedzialowy(1)); // Wagon nr 1
+    interCity.dodajWagon(new WagonPrzedzialowy(2));    // Wagon nr 2
 
     int opcja;
     do {
-        wyswietlMenu();
-        if (!(cin >> opcja)) { // Zabezpieczenie przed literami
-            cin.clear(); cin.ignore(1000, '\n');
+        cout << "\n=== SYSTEM REZERWACJI PKP ===\n";
+        cout << "1. Zarezerwuj miejsce\n";
+        cout << "2. Lista pasazerow\n";
+        cout << "0. Wyjscie\n";
+        cout << "Wybierz opcje: ";
+
+        if (!(cin >> opcja)) {
+            cout << "To nie jest liczba!\n";
+            cin.clear();
+            cin.ignore(1000, '\n');
             continue;
         }
 
-        switch (opcja) {
-        case 1: {
-            int nr;
-            cout << "Podaj numer wagonu (1-2): ";
-            cin >> nr;
-            pkp.wyswietlWagon(nr);
-            break;
+        try {
+            switch (opcja) {
+            case 1: {
+                int w, m;
+                cout << "Podaj numer wagonu (1 lub 2): "; cin >> w;
+                cout << "Podaj numer miejsca: "; cin >> m;
+                // Proba rezerwacji moze rzucic wyjatek
+                interCity.zarezerwujMiejsce(w, m);
+                break;
+            }
+            case 2:
+                interCity.wyswietlListePasazerow();
+                break;
+            case 0:
+                cout << "Zamykanie programu...\n";
+                break;
+            default:
+                cout << "Nieznana opcja.\n";
+            }
         }
-        case 2: {
-            int nrW, nrM;
-            cout << "Podaj numer wagonu: "; cin >> nrW;
-            cout << "Podaj numer miejsca: "; cin >> nrM;
-            pkp.zarezerwujMiejsce(nrW, nrM);
-            break;
+        catch (const MiejsceZajeteException& e) {
+            cerr << "[BLAD] " << e.what() << endl;
         }
-        case 3: {
-            cout << "Jaki typ miejsca? (1-Okno, 2-Srodek, 3-Korytarz): ";
-            int t; cin >> t;
-            TypMiejsca szukanyTyp = TypMiejsca::KORYTARZ;
-            if (t == 1) szukanyTyp = TypMiejsca::OKNO;
-            else if (t == 2) szukanyTyp = TypMiejsca::SRODEK;
-
-            pkp.znajdzWolneMiejsce(szukanyTyp);
-            break;
+        catch (const NieznalezionoElementuException& e) {
+            cerr << "[BLAD] " << e.what() << endl;
         }
-        case 4:
-            pkp.wyswietlListePasazerow();
-            break;
-        case 0:
-            cout << "Zamykanie programu...\n";
-            break;
-        default:
-            cout << "Nieznana opcja.\n";
+        catch (const BledneDaneException& e) {
+            cerr << "[BLAD] " << e.what() << endl;
+        }
+        catch (...) {
+            cerr << "[BLAD] Wystapil nieznany blad.\n";
         }
 
     } while (opcja != 0);

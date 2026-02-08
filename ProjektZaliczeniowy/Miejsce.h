@@ -6,28 +6,21 @@ enum class TypMiejsca { OKNO, SRODEK, KORYTARZ };
 class Miejsce {
 private:
     int numerMiejsca;
-    int rzad;
-    char kolumna;
-    bool czyPrzedzial;
-    bool czyStolik;
     TypMiejsca rodzaj;
-
     double cenaBazowa;
-    Pasazer* pasazer;
+    Pasazer* pasazer; // Wskaznik na pasazera
 
 public:
-    Miejsce(int nr, int rz, char kol, TypMiejsca rodz, bool przedzial, bool stolik, double cena);
+    Miejsce(int nr, TypMiejsca r, double cena);
     ~Miejsce();
 
     bool czyWolne() const;
     int pobierzNumer() const;
     TypMiejsca pobierzRodzaj() const;
+    Pasazer* pobierzPasazera() const;
 
     double obliczCeneKoncowa() const;
 
-    // Zwraca wskaznik na pasazera (potrzebne do rejestru)
-    Pasazer* pobierzPasazera() const;
-
-    void zarezerwuj(Pasazer* nowyPasazer);
+    void zarezerwuj(Pasazer* p);
     void zwolnij();
 };

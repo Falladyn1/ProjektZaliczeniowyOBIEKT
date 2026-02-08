@@ -1,32 +1,24 @@
 #include "WagonBezprzedzialowy.h"
 #include <iostream>
-#include <iomanip>
 
 using namespace std;
 
 WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr)
-    : Wagon(_nr), liczbaRzedow(10) {
-    klasa = 2;
-    cenaZaMiejsce = 60.00;
+    : Wagon(_nr, 60.0) { // Cena 60 zl
     generujMiejsca();
 }
 
 void WagonBezprzedzialowy::generujMiejsca() {
-    int licznik = 1;
-    for (int r = 1; r <= liczbaRzedow; ++r) {
-        bool maStolik = (r % 2 == 0);
-        siedzenia.push_back(Miejsce(licznik++, r, 'A', TypMiejsca::OKNO, false, maStolik, cenaZaMiejsce));
-        siedzenia.push_back(Miejsce(licznik++, r, 'B', TypMiejsca::KORYTARZ, false, maStolik, cenaZaMiejsce));
-        siedzenia.push_back(Miejsce(licznik++, r, 'C', TypMiejsca::KORYTARZ, false, maStolik, cenaZaMiejsce));
-        siedzenia.push_back(Miejsce(licznik++, r, 'D', TypMiejsca::OKNO, false, maStolik, cenaZaMiejsce));
+    // 10 rzedow po 4 miejsca = 40 miejsc
+    for (int i = 1; i <= 40; ++i) {
+        TypMiejsca typ = TypMiejsca::KORYTARZ;
+        if (i % 4 == 1 || i % 4 == 0) typ = TypMiejsca::OKNO;
+
+        siedzenia.push_back(Miejsce(i, typ, cenaZaMiejsce));
     }
 }
 
 void WagonBezprzedzialowy::wyswietlSchemat() {
-    cout << "\n--- WAGON NR " << numerWagonu << " (Bezprzedzialowy) ---\n";
-    for (const auto& m : siedzenia) {
-        if (m.pobierzNumer() % 4 == 1) cout << "Rzad " << (m.pobierzNumer() / 4 + 1) << ": ";
-        cout << "[ " << (m.czyWolne() ? to_string(m.pobierzNumer()) : "XX") << " ] ";
-        if (m.pobierzNumer() % 4 == 0) cout << "\n";
-    }
+    cout << "\n--- WAGON BEZPRZEDZIALOWY NR " << numerWagonu << " (Klasa 2) ---\n";
+    cout << "Uklad: [OKNO KORYTARZ KORYTARZ OKNO]\n";
 }
