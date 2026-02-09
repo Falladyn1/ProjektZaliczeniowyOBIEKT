@@ -127,6 +127,7 @@
     <ClCompile Include="Miejsce.cpp" />
     <ClCompile Include="Pasazer.cpp" />
     <ClCompile Include="Pociag.cpp" />
+    <ClCompile Include="Trasa.cpp" />
     <ClCompile Include="Wagon.cpp" />
     <ClCompile Include="WagonBezprzedzialowy.cpp" />
     <ClCompile Include="WagonPrzedzialowy.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="Miejsce.h" />
     <ClInclude Include="Pasazer.h" />
     <ClInclude Include="Pociag.h" />
+    <ClInclude Include="Trasa.h" />
     <ClInclude Include="Wagon.h" />
     <ClInclude Include="WagonBezprzedzialowy.h" />
     <ClInclude Include="WagonPrzedzialowy.h" />

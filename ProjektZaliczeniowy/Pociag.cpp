@@ -1,11 +1,13 @@
 #include "Pociag.h"
 #include "Wyjatki.h"
 #include <iostream>
-#include <fstream> // Niezbêdne do plików
+#include <fstream>
 
 using namespace std;
 
-Pociag::Pociag(string _nazwa) : nazwa(_nazwa) {}
+Pociag::Pociag(string _nazwa, Trasa _trasa)
+    : nazwa(_nazwa), trasa(_trasa) {
+}
 
 Pociag::~Pociag() {
     for (auto w : wagony) delete w;
@@ -18,8 +20,12 @@ void Pociag::dodajWagon(Wagon* w) {
 
 void Pociag::pokazPodgladPociagu() {
     ustawKolor(KOLOR_ZOLTY);
-    cout << "POCIAG: " << nazwa << "\n\n";
+    cout << "POCIAG: " << nazwa << "\n";
     ustawKolor(KOLOR_RESET);
+
+    // Wyswietlanie trasy
+    trasa.wyswietlPrzebieg();
+
     for (auto w : wagony) {
         w->wyswietlSchemat();
         cout << "\n";
@@ -33,7 +39,6 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
                 if (m.pobierzNumer() == nrMiejsca) {
                     if (!m.czyWolne()) throw MiejsceZajeteException(nrMiejsca);
 
-                    // Pobieranie danych
                     string imie, nazwisko;
                     int wyborUlgi;
                     cout << "Imie: "; cin >> imie;
@@ -79,7 +84,6 @@ void Pociag::znajdzWolneMiejsce(int tryb) {
     for (auto w : wagony) {
         for (const auto& m : w->pobierzMiejsca()) {
             bool pasuje = (m.pobierzRodzaj() == szukany);
-            // Jesli szukamy korytarza, akceptujemy tez SRODEK i KORYTARZ
             if (tryb == 2 && m.pobierzRodzaj() != TypMiejsca::OKNO) pasuje = true;
 
             if (m.czyWolne() && pasuje) {
@@ -113,7 +117,6 @@ void Pociag::zapiszStanDoPliku() {
         for (const auto& m : w->pobierzMiejsca()) {
             if (!m.czyWolne()) {
                 Pasazer* p = m.pobierzPasazera();
-                // Format: Wagon Miejsce Imie Nazwisko TypUlgi(0/1/2)
                 int ulgaInt = 0;
                 if (p->pobierzUlge() == TypUlgi::STUDENT) ulgaInt = 1;
                 if (p->pobierzUlge() == TypUlgi::SENIOR) ulgaInt = 2;
@@ -138,7 +141,6 @@ void Pociag::wczytajStanZPliku() {
         if (u == 1) ulga = TypUlgi::STUDENT;
         if (u == 2) ulga = TypUlgi::SENIOR;
 
-        // Reczna rezerwacja bez pytania uzytkownika
         for (auto wag : wagony) {
             if (wag->pobierzNumer() == w) {
                 for (auto& mies : wag->pobierzMiejsca()) {

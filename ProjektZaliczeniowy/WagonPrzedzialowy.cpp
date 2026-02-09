@@ -40,7 +40,7 @@ void WagonPrzedzialowy::wyswietlSchemat() {
         }
         cout << "\n    ";
 
-        // Miejsca 6, 5, 4 (naprzeciwko)
+        // Miejsca 6, 5, 4 naprzeciwko
         for (int i = 5; i >= 3; --i) {
             int idx = start + i;
             if (siedzenia[idx].czyWolne()) {
