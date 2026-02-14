@@ -42,7 +42,8 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
                     int wyborUlgi;
                     cout << "Imie: "; cin >> imie;
                     cout << "Nazwisko: "; cin >> nazwisko;
-                    cout << "Ulga (1-Student, 2-Senior, 0-Brak): "; cin >> wyborUlgi;
+                    cout << "Ulga (1-Student, 2-Senior, 0-Brak): ";
+                    if (!(cin >> wyborUlgi)) throw BledneDaneException("Nieprawidlowy format ulgi.");
 
                     TypUlgi ulga = TypUlgi::NORMALNY;
                     if (wyborUlgi == 1) ulga = TypUlgi::STUDENT;
@@ -52,10 +53,10 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
                     return;
                 }
             }
-            throw NieznalezionoElementuException("Brak miejsca.");
+            throw NieznalezionoElementuException("Brak miejsca o numerze " + to_string(nrMiejsca));
         }
     }
-    throw NieznalezionoElementuException("Brak wagonu.");
+    throw NieznalezionoElementuException("Brak wagonu o numerze " + to_string(nrWagonu));
 }
 
 void Pociag::anulujRezerwacje(int nrWagonu, int nrMiejsca) {

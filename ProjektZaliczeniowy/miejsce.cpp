@@ -1,17 +1,10 @@
 #include "Miejsce.h"
 
-Miejsce::Miejsce(int nr, TypMiejsca r, double cena)
-    : numerMiejsca(nr), rodzaj(r), cenaBazowa(cena), pasazer(nullptr) {
-}
+Miejsce::Miejsce(int nr, TypMiejsca r, double cena) : numerMiejsca(nr), rodzaj(r), cenaBazowa(cena), pasazer(nullptr) {}
 
-Miejsce::~Miejsce() {
-    if (pasazer != nullptr) delete pasazer;
-}
+Miejsce::~Miejsce() { if (pasazer != nullptr) delete pasazer; }
 
-bool Miejsce::czyWolne() const {
-    return pasazer == nullptr;
-}
-
+bool Miejsce::czyWolne() const { return pasazer == nullptr; }
 int Miejsce::pobierzNumer() const { return numerMiejsca; }
 TypMiejsca Miejsce::pobierzRodzaj() const { return rodzaj; }
 Pasazer* Miejsce::pobierzPasazera() const { return pasazer; }
@@ -27,8 +20,5 @@ void Miejsce::zarezerwuj(Pasazer* p) {
 }
 
 void Miejsce::zwolnij() {
-    if (pasazer != nullptr) {
-        delete pasazer;
-        pasazer = nullptr;
-    }
+    if (pasazer != nullptr) { delete pasazer; pasazer = nullptr; }
 }
