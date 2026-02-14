@@ -13,6 +13,5 @@ public:
     void dodajStacje(std::string nazwaStacji);
     void wyswietlPrzebieg() const;
 
-    // --- NOWE METODY ---
     const std::vector<std::string>& pobierzStacje() const { return stacje; }
 };

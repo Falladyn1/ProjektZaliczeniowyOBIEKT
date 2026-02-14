@@ -23,7 +23,6 @@ void Pociag::pokazPodgladPociagu() {
     cout << "POCIAG: " << nazwa << "\n";
     ustawKolor(KOLOR_RESET);
 
-    // Wyswietlanie trasy
     trasa.wyswietlPrzebieg();
 
     for (auto w : wagony) {

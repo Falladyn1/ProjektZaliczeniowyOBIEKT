@@ -4,7 +4,7 @@
 #include "WagonPrzedzialowy.h"
 #include "Wyjatki.h"
 #include <iostream>
-#include <cstdlib> // do system("cls")
+#include <cstdlib> 
 
 using namespace std;
 
@@ -13,7 +13,6 @@ System::System() {
 }
 
 System::~System() {
-    // Sprz¹tanie pamiêci przy zamykaniu programu
     for (auto p : pociagi) {
         delete p;
     }
@@ -21,7 +20,6 @@ System::~System() {
 }
 
 void System::inicjalizujDane() {
-    // === TWORZENIE POCI¥GU 1 ===
     Trasa trasaIC("Warszawa -> Gdynia");
     trasaIC.dodajStacje("Warszawa");
     trasaIC.dodajStacje("Ilawa");
@@ -32,9 +30,8 @@ void System::inicjalizujDane() {
     Pociag* p1 = new Pociag("IC Neptun", trasaIC);
     p1->dodajWagon(new WagonBezprzedzialowy(1));
     p1->dodajWagon(new WagonPrzedzialowy(2));
-    p1->wczytajStanZPliku(); // Próba odczytu z pliku
+    p1->wczytajStanZPliku(); 
 
-    // === TWORZENIE POCI¥GU 2 ===
     Trasa trasaEIP("Krakow -> Warszawa");
     trasaEIP.dodajStacje("Krakow");
     trasaEIP.dodajStacje("Warszawa");
@@ -43,11 +40,9 @@ void System::inicjalizujDane() {
     p2->dodajWagon(new WagonBezprzedzialowy(1));
     p2->dodajWagon(new WagonPrzedzialowy(2));
 
-    // Dodanie do systemu
     pociagi.push_back(p1);
     pociagi.push_back(p2);
 
-    // Rejestracja w wyszukiwarce
     wyszukiwarka.dodajPociag(p1);
     wyszukiwarka.dodajPociag(p2);
 }
@@ -109,7 +104,6 @@ void System::obslugaRezerwacji() {
     cout << "Podaj stacje poczatkowa: "; cin >> skad;
     cout << "Podaj stacje koncowa:    "; cin >> dokad;
 
-    // Krok 1: Wyszukiwanie
     vector<Pociag*> wyniki = wyszukiwarka.znajdzPolaczenia(skad, dokad);
 
     if (wyniki.empty()) {
@@ -119,7 +113,6 @@ void System::obslugaRezerwacji() {
         return;
     }
 
-    // Krok 2: Wybór poci¹gu
     cout << "\nZnaleziono nastepujace polaczenia:\n";
     for (size_t i = 0; i < wyniki.size(); ++i) {
         ustawKolor(KOLOR_ZIELONY);
@@ -135,11 +128,9 @@ void System::obslugaRezerwacji() {
     if (wyborPociagu > 0 && wyborPociagu <= (int)wyniki.size()) {
         Pociag* wybrany = wyniki[wyborPociagu - 1];
 
-        // Krok 3: Wyœwietlenie miejsc
         system("cls");
         wybrany->pokazPodgladPociagu();
 
-        // Krok 4: Rezerwacja
         try {
             int w, m;
             cout << "\n--- KUPNO BILETU ---\n";

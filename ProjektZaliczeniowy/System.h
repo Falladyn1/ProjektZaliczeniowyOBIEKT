@@ -9,7 +9,6 @@ private:
     std::vector<Pociag*> pociagi;
     Wyszukiwarka wyszukiwarka;
 
-    // Metody wewnêtrzne
     void inicjalizujDane();
     void obslugaRezerwacji();
     void obslugaListyPasazerow();
@@ -18,5 +17,5 @@ public:
     System();
     ~System();
 
-    void uruchom(); // G³ówna pêtla menu
+    void uruchom(); 
 };
