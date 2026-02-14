@@ -21,7 +21,7 @@ public:
 
 class BledneDaneException : public std::runtime_error {
 public:
-    BledneDaneException() : std::runtime_error("Blad: Podano nieprawidlowe dane wejsciowe.") {}
+    BledneDaneException(std::string msg = "Podano nieprawidlowe dane wejsciowe.") : std::runtime_error("Blad: " + msg) {}
 };
 
 class NieznalezionoElementuException : public std::runtime_error {
