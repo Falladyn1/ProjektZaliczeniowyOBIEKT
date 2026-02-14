@@ -25,4 +25,8 @@ public:
 
     void zapiszStanDoPliku();
     void wczytajStanZPliku();
+
+    // --- NOWE METODY ---
+    std::string pobierzNazwe() const { return nazwa; }
+    const Trasa& pobierzTrase() const { return trasa; }
 };
