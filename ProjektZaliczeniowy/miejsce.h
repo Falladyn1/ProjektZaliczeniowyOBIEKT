@@ -1,7 +1,7 @@
 #pragma once
 #include "Pasazer.h"
 
-enum class TypMiejsca { OKNO, SRODEK, KORYTARZ };
+enum TypMiejsca { OKNO, SRODEK, KORYTARZ };
 
 class Miejsce {
 private:
