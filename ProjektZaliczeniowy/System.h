@@ -12,6 +12,7 @@ private:
     void inicjalizujDane();
     void obslugaRezerwacji();
     void obslugaListyPasazerow();
+    void wyswietlDostepneStacje();
 
 public:
     System();

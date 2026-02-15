@@ -26,7 +26,6 @@ void WagonPrzedzialowy::wyswietlSchemat() {
         int start = p * 6;
         cout << " P" << p + 1 << " ";
 
-        // Miejsca 1, 2, 3
         for (int i = 0; i < 3; ++i) {
             int idx = start + i;
             if (siedzenia[idx].czyWolne()) {
@@ -41,7 +40,6 @@ void WagonPrzedzialowy::wyswietlSchemat() {
         }
         cout << "\n    ";
 
-        // Miejsca 6, 5, 4 naprzeciwko
         for (int i = 5; i >= 3; --i) {
             int idx = start + i;
             if (siedzenia[idx].czyWolne()) {

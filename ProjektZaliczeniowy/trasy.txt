@@ -1,0 +1,6 @@
+IC_Neptun
+5
+Warszawa Ilawa Malbork Gdansk Gdynia
+EIP_Poludnie
+2
+Krakow Warszawa

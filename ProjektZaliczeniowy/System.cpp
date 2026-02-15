@@ -5,7 +5,8 @@
 #include "Wyjatki.h"
 #include <iostream>
 #include <cstdlib> 
-#include <fstream> // Doda³em to, co naprawia b³êdy C2079 i E0070
+#include <fstream> 
+#include <algorithm> // Do filtrowania unikalnych stacji
 
 using namespace std;
 
@@ -21,38 +22,60 @@ System::~System() {
 }
 
 void System::inicjalizujDane() {
-    Trasa trasaIC("Warszawa -> Gdynia");
-    trasaIC.dodajStacje("Warszawa");
-    trasaIC.dodajStacje("Ilawa");
-    trasaIC.dodajStacje("Malbork");
-    trasaIC.dodajStacje("Gdansk");
-    trasaIC.dodajStacje("Gdynia");
+    // Sprawdzamy, czy plik z trasami istnieje
+    ifstream plikSprawdz("trasy.txt");
+    if (!plikSprawdz.is_open()) {
+        // Jeœli nie, tworzymy go z domyœlnymi przyk³adowymi danymi
+        ofstream plikZapis("trasy.txt");
+        plikZapis << "IC_Neptun\n5\nWarszawa Ilawa Malbork Gdansk Gdynia\n";
+        plikZapis << "EIP_Poludnie\n2\nKrakow Warszawa\n";
+        plikZapis.close();
+    }
+    else {
+        plikSprawdz.close();
+    }
 
-    Pociag* p1 = new Pociag("IC Neptun", trasaIC);
-    p1->dodajWagon(new WagonBezprzedzialowy(1));
-    p1->dodajWagon(new WagonPrzedzialowy(2));
-    p1->wczytajStanZPliku();
+    // W³aœciwe wczytywanie
+    ifstream plikTras("trasy.txt");
+    string nazwaPociagu;
 
-    Trasa trasaEIP("Krakow -> Warszawa");
-    trasaEIP.dodajStacje("Krakow");
-    trasaEIP.dodajStacje("Warszawa");
+    while (plikTras >> nazwaPociagu) {
+        int liczbaStacji;
+        plikTras >> liczbaStacji;
 
-    Pociag* p2 = new Pociag("EIP Poludnie", trasaEIP);
-    p2->dodajWagon(new WagonBezprzedzialowy(1));
-    p2->dodajWagon(new WagonPrzedzialowy(2));
+        vector<string> nazwyStacji;
+        for (int i = 0; i < liczbaStacji; ++i) {
+            string stacja;
+            plikTras >> stacja;
+            nazwyStacji.push_back(stacja);
+        }
 
-    pociagi.push_back(p1);
-    pociagi.push_back(p2);
+        if (nazwyStacji.size() >= 2) {
+            string nazwaRelacji = nazwyStacji.front() + " -> " + nazwyStacji.back();
+            Trasa t(nazwaRelacji);
 
-    wyszukiwarka.dodajPociag(p1);
-    wyszukiwarka.dodajPociag(p2);
+            for (const auto& s : nazwyStacji) {
+                t.dodajStacje(s);
+            }
+
+            Pociag* p = new Pociag(nazwaPociagu, t);
+            // Domyœlnie dla ka¿dego z pliku tworzymy 2 wagony
+            p->dodajWagon(new WagonBezprzedzialowy(1));
+            p->dodajWagon(new WagonPrzedzialowy(2));
+            p->wczytajStanZPliku(); // Z bazy rezerwacji
+
+            pociagi.push_back(p);
+            wyszukiwarka.dodajPociag(p);
+        }
+    }
+    plikTras.close();
 }
 
 void System::uruchom() {
     int opcja = -1;
 
     do {
-        system("cls"); // Czyœci ekran
+        system("cls");
         ustawKolor(KOLOR_NIEBIESKI);
         cout << "======================================\n";
         cout << "      SYSTEM REZERWACJI KOLEJOWEJ     \n";
@@ -61,7 +84,8 @@ void System::uruchom() {
         cout << " [1] Znajdz polaczenie i kup bilet\n";
         cout << " [2] Pokaz podglad wszystkich pociagow\n";
         cout << " [3] Lista pasazerow (Administrator)\n";
-        cout << " [4] Zapisz stan systemu\n";
+        cout << " [4] Zapisz stan systemu (Bilety)\n";
+        cout << " [5] Dostepne stacje\n";
         cout << " [0] WYJSCIE\n";
         cout << "======================================\n";
         cout << " Wybor > ";
@@ -85,15 +109,18 @@ void System::uruchom() {
             break;
         case 4:
         {
-            // Tworzymy plik na nowo i czyœcimy jego zawartoœæ
             ofstream plik("baza_danych.txt", ios::trunc);
             plik.close();
         }
         for (auto p : pociagi) p->zapiszStanDoPliku();
         ustawKolor(KOLOR_ZIELONY);
-        cout << "Zapisano dane wszystkich pociagow!\n";
+        cout << "Zapisano dane rezerwacji wszystkich pociagow!\n";
         ustawKolor(KOLOR_RESET);
         break;
+        case 5:
+            system("cls");
+            wyswietlDostepneStacje();
+            break;
         case 0:
             cout << "Do widzenia!\n";
             break;
@@ -147,7 +174,14 @@ void System::obslugaRezerwacji() {
         cout << "Numer wagonu: "; cin >> w;
         cout << "Numer miejsca: "; cin >> m;
 
-        wybrany->zarezerwujMiejsce(w, m);
+        try {
+            wybrany->zarezerwujMiejsce(w, m);
+        }
+        catch (const exception& e) {
+            ustawKolor(KOLOR_CZERWONY);
+            cout << "\nBLAD: " << e.what() << "\n";
+            ustawKolor(KOLOR_RESET);
+        }
     }
     else {
         cout << "Anulowano operacje.\n";
@@ -163,4 +197,25 @@ void System::obslugaListyPasazerow() {
         p->wyswietlListePasazerow();
         cout << "-------------------------------\n";
     }
+}
+
+void System::wyswietlDostepneStacje() {
+    vector<string> unikalneStacje;
+
+    // Zbieramy wszystkie stacje do jednego wektora (bez powtórzeñ)
+    for (auto p : pociagi) {
+        for (const auto& stacja : p->pobierzTrase().pobierzStacje()) {
+            if (find(unikalneStacje.begin(), unikalneStacje.end(), stacja) == unikalneStacje.end()) {
+                unikalneStacje.push_back(stacja);
+            }
+        }
+    }
+
+    ustawKolor(KOLOR_ZOLTY);
+    cout << "\n=== LISTA DOSTEPNYCH STACJI W SYSTEMIE ===\n";
+    ustawKolor(KOLOR_RESET);
+    for (size_t i = 0; i < unikalneStacje.size(); ++i) {
+        cout << " - " << unikalneStacje[i] << "\n";
+    }
+    cout << "==========================================\n";
 }

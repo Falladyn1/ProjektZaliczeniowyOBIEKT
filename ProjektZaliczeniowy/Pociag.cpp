@@ -35,10 +35,7 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
             for (auto& m : w->pobierzMiejsca()) {
                 if (m.pobierzNumer() == nrMiejsca) {
                     if (!m.czyWolne()) {
-                        ustawKolor(KOLOR_CZERWONY);
-                        cout << "Blad: Miejsce " << nrMiejsca << " jest juz zajete!\n";
-                        ustawKolor(KOLOR_RESET);
-                        return;
+                        throw BladRezerwacji("To miejsce jest juz zajete!");
                     }
 
                     string imie, nazwisko;
@@ -47,11 +44,8 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
                     cout << "Nazwisko: "; cin >> nazwisko;
                     cout << "Ulga (1-Student, 2-Senior, 0-Brak): ";
                     if (!(cin >> wyborUlgi)) {
-                        ustawKolor(KOLOR_CZERWONY);
-                        cout << "Blad: Nieprawidlowy format ulgi.\n";
-                        ustawKolor(KOLOR_RESET);
                         cin.clear(); cin.ignore(1000, '\n');
-                        return;
+                        throw BladDanych("Nieprawidlowy format ulgi!");
                     }
 
                     TypUlgi ulga = TypUlgi::NORMALNY;
@@ -65,15 +59,10 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
                     return;
                 }
             }
-            ustawKolor(KOLOR_CZERWONY);
-            cout << "Blad: Brak miejsca o numerze " << nrMiejsca << "\n";
-            ustawKolor(KOLOR_RESET);
-            return;
+            throw BladRezerwacji("Brak miejsca o numerze " + to_string(nrMiejsca));
         }
     }
-    ustawKolor(KOLOR_CZERWONY);
-    cout << "Blad: Brak wagonu o numerze " << nrWagonu << "\n";
-    ustawKolor(KOLOR_RESET);
+    throw BladRezerwacji("Brak wagonu o numerze " + to_string(nrWagonu));
 }
 
 void Pociag::anulujRezerwacje(int nrWagonu, int nrMiejsca) {
@@ -82,8 +71,7 @@ void Pociag::anulujRezerwacje(int nrWagonu, int nrMiejsca) {
             for (auto& m : w->pobierzMiejsca()) {
                 if (m.pobierzNumer() == nrMiejsca) {
                     if (m.czyWolne()) {
-                        cout << "Blad: To miejsce jest juz wolne!\n";
-                        return;
+                        throw BladRezerwacji("To miejsce jest juz wolne!");
                     }
                     m.zwolnij();
                     ustawKolor(KOLOR_ZIELONY);
@@ -92,9 +80,10 @@ void Pociag::anulujRezerwacje(int nrWagonu, int nrMiejsca) {
                     return;
                 }
             }
+            throw BladRezerwacji("Brak miejsca o numerze " + to_string(nrMiejsca));
         }
     }
-    cout << "Blad: Nie znaleziono miejsca/wagonu.\n";
+    throw BladRezerwacji("Brak wagonu o numerze " + to_string(nrWagonu));
 }
 
 void Pociag::znajdzWolneMiejsce(int tryb) {
@@ -104,7 +93,7 @@ void Pociag::znajdzWolneMiejsce(int tryb) {
     for (auto w : wagony) {
         for (const auto& m : w->pobierzMiejsca()) {
             bool pasuje = (m.pobierzRodzaj() == szukany);
-            if (tryb == 2 && m.pobierzRodzaj() != OKNO) pasuje = true; // Dowolne oprócz okna
+            if (tryb == 2 && m.pobierzRodzaj() != OKNO) pasuje = true;
 
             if (m.czyWolne() && pasuje) {
                 ustawKolor(KOLOR_ZOLTY);
@@ -130,7 +119,7 @@ void Pociag::wyswietlListePasazerow() {
 }
 
 void Pociag::zapiszStanDoPliku() {
-    ofstream plik("baza_danych.txt", ios::app); // Zapisujemy z dopsiywaniem lub mozna uzyc po prostu ofstream
+    ofstream plik("baza_danych.txt", ios::app);
     if (!plik.is_open()) return;
 
     for (auto w : wagony) {
