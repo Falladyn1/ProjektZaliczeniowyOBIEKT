@@ -19,9 +19,14 @@ void WagonPrzedzialowy::generujMiejsca() {
 
 void WagonPrzedzialowy::wyswietlSchemat() {
     cout << "Wagon " << numerWagonu << " (Przedzialowy):\n";
-    for (int p = 0; p < 5; ++p) {
+
+    int iloscPrzedzialow = (int)siedzenia.size() / 6;
+
+    for (int p = 0; p < iloscPrzedzialow; ++p) {
         int start = p * 6;
         cout << " P" << p + 1 << " ";
+
+        // Miejsca 1, 2, 3
         for (int i = 0; i < 3; ++i) {
             int idx = start + i;
             if (siedzenia[idx].czyWolne()) {
@@ -35,6 +40,8 @@ void WagonPrzedzialowy::wyswietlSchemat() {
             ustawKolor(KOLOR_RESET);
         }
         cout << "\n    ";
+
+        // Miejsca 6, 5, 4 naprzeciwko
         for (int i = 5; i >= 3; --i) {
             int idx = start + i;
             if (siedzenia[idx].czyWolne()) {

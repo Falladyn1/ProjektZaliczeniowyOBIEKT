@@ -29,6 +29,7 @@ void WagonBezprzedzialowy::wyswietlSchemat() {
             cout << "[XX]";
         }
         ustawKolor(KOLOR_RESET);
+
         if ((i + 1) % 4 == 0) cout << "\n";
         else if ((i + 1) % 2 == 0) cout << "   ";
         else cout << " ";
