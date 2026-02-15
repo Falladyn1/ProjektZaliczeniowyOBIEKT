@@ -10,7 +10,7 @@ private:
 
     void inicjalizujDane();
     void obslugaRezerwacji();
-    void obslugaAnulowania(); // Nowa metoda
+    void obslugaAnulowania();
     void obslugaListyPasazerow();
     void wyswietlDostepneStacje();
 

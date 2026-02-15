@@ -46,7 +46,7 @@ void WagonPrzedzialowy::wyswietlSchemat() {
         }
         cout << endl << "    ";
 
-        // Dolny rzad (tylem do kierunku)
+        // Dolny rzad
         for (int i = 5; i >= 3; i--) {
             if (siedzenia[start + i].czyWolne() == true) {
                 ustawKolor(KOLOR_ZIELONY);

@@ -4,7 +4,6 @@
 
 using namespace std;
 
-// Klasa abstrakcyjna
 class Wagon {
 protected:
     int numerWagonu;
@@ -16,9 +15,9 @@ public:
         numerWagonu = nr;
         cenaZaMiejsce = cena;
     }
-    virtual ~Wagon() {} // Wirtualny destruktor
+    virtual ~Wagon() {} 
 
-    virtual void generujMiejsca() = 0; // Metoda czysto wirtualna
+    virtual void generujMiejsca() = 0;
     virtual void wyswietlSchemat() = 0;
 
     int pobierzNumer() { return numerWagonu; }

@@ -65,7 +65,7 @@ void System::uruchom() {
         cout << "======================================" << endl;
         ustawKolor(KOLOR_RESET);
         cout << " [1] Znajdz polaczenie i kup bilet" << endl;
-        cout << " [2] Anuluj rezerwacje" << endl; // NOWA OPCJA
+        cout << " [2] Anuluj rezerwacje" << endl; 
         cout << " [3] Lista pasazerow (Administrator)" << endl;
         cout << " [4] Zapisz stan systemu (Bilety)" << endl;
         cout << " [5] Dostepne stacje" << endl;
@@ -83,7 +83,7 @@ void System::uruchom() {
             obslugaRezerwacji();
         }
         else if (opcja == 2) {
-            obslugaAnulowania(); // WYWOLANIE NOWEJ METODY
+            obslugaAnulowania();
         }
         else if (opcja == 3) {
             system("cls");
@@ -91,7 +91,7 @@ void System::uruchom() {
         }
         else if (opcja == 4) {
             ofstream plik("baza_danych.txt", ios::trunc);
-            plik.close(); // Reset pliku
+            plik.close(); 
 
             for (int i = 0; i < pociagi.size(); i++) {
                 pociagi[i]->zapiszStanDoPliku();
@@ -173,7 +173,6 @@ void System::obslugaRezerwacji() {
     }
 }
 
-// NOWA METODA DO ANULOWANIA REZERWACJI
 void System::obslugaAnulowania() {
     string nazwa;
     int w, m;
@@ -184,11 +183,10 @@ void System::obslugaAnulowania() {
 
     Pociag* znalezionyPociag = nullptr;
 
-    // Klasyczne wyszukiwanie pociagu
     for (int i = 0; i < pociagi.size(); i++) {
         if (pociagi[i]->pobierzNazwe() == nazwa) {
             znalezionyPociag = pociagi[i];
-            break; // Znalezlismy, wiec przerywamy petle
+            break; 
         }
     }
 
@@ -234,7 +232,6 @@ void System::wyswietlDostepneStacje() {
             string stacja = stacjePociagu[j];
             bool jest = false;
 
-            // Reczne sprawdzanie czy stacja jest juz w unikalnych
             for (int k = 0; k < unikalne.size(); k++) {
                 if (unikalne[k] == stacja) {
                     jest = true;

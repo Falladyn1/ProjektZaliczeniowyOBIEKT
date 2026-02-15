@@ -4,11 +4,10 @@ Miejsce::Miejsce(int nr, TypMiejsca r, double cena) {
     numerMiejsca = nr;
     rodzaj = r;
     cenaBazowa = cena;
-    pasazer = nullptr; // Na poczatku miejsce jest wolne
+    pasazer = nullptr; 
 }
 
 Miejsce::~Miejsce() {
-    // Zwalnianie pamieci
     if (pasazer != nullptr) {
         delete pasazer;
     }
@@ -32,7 +31,7 @@ double Miejsce::obliczCeneKoncowa() {
 
 void Miejsce::zarezerwuj(Pasazer* p) {
     if (pasazer != nullptr) {
-        delete pasazer; // Usuwamy starego pasazera jakby co
+        delete pasazer; 
     }
     pasazer = p;
 }

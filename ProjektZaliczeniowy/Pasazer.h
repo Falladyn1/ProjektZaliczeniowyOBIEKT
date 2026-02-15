@@ -13,7 +13,6 @@ private:
     TypUlgi ulga;
 
 public:
-    // Konstruktor
     Pasazer(string i, string n, TypUlgi u);
 
     // Gettery
@@ -22,6 +21,5 @@ public:
     TypUlgi pobierzUlge();
     double pobierzMnoznikCeny();
 
-    // Przeciazenie operatora wypisywania
     friend ostream& operator<<(ostream& os, Pasazer& p);
 };

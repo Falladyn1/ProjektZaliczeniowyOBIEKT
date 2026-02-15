@@ -16,7 +16,6 @@ inline void ustawKolor(int k) {
     SetConsoleTextAttribute(hConsole, k);
 }
 
-// Moje klasy wyjatkow do obslugi bledow
 class BladRezerwacji : public runtime_error {
 public:
     BladRezerwacji(string wiadomosc) : runtime_error(wiadomosc) {}

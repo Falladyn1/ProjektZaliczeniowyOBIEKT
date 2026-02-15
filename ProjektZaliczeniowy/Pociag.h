@@ -15,7 +15,7 @@ private:
 
 public:
     Pociag(string nazwa, string godzina, Trasa trasa);
-    ~Pociag(); // Destruktor do usuwania wagonow
+    ~Pociag();
 
     void dodajWagon(Wagon* w);
     void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);

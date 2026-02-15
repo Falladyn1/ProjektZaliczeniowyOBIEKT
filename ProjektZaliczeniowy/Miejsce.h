@@ -12,8 +12,7 @@ private:
 
 public:
     Miejsce(int nr, TypMiejsca r, double cena);
-    ~Miejsce(); // Destruktor
-
+    ~Miejsce();
     bool czyWolne();
     int pobierzNumer();
     TypMiejsca pobierzRodzaj();
