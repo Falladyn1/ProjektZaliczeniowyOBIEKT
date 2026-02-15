@@ -13,7 +13,7 @@ public:
     Pasazer(std::string i, std::string n, TypUlgi u);
     std::string pobierzImie() const;
     std::string pobierzNazwisko() const;
-    TypUlgi pobierzUlge() const;
+    TypUlgi ulga_get() const { return ulga; }
     double pobierzMnoznikCeny() const;
     friend std::ostream& operator<<(std::ostream& os, const Pasazer& p);
 };

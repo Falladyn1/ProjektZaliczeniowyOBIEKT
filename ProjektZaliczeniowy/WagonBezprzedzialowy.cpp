@@ -11,8 +11,8 @@ WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr) : Wagon(_nr, 60.0) {
 
 void WagonBezprzedzialowy::generujMiejsca() {
     for (int i = 1; i <= 40; ++i) {
-        TypMiejsca typ = TypMiejsca::KORYTARZ;
-        if (i % 4 == 1 || i % 4 == 0) typ = TypMiejsca::OKNO;
+        TypMiejsca typ = KORYTARZ;
+        if (i % 4 == 1 || i % 4 == 0) typ = OKNO;
         siedzenia.push_back(Miejsce(i, typ, cenaZaMiejsce));
     }
 }
@@ -29,7 +29,6 @@ void WagonBezprzedzialowy::wyswietlSchemat() {
             cout << "[XX]";
         }
         ustawKolor(KOLOR_RESET);
-
         if ((i + 1) % 4 == 0) cout << "\n";
         else if ((i + 1) % 2 == 0) cout << "   ";
         else cout << " ";

@@ -4,7 +4,6 @@ Pasazer::Pasazer(std::string i, std::string n, TypUlgi u) : imie(i), nazwisko(n)
 
 std::string Pasazer::pobierzImie() const { return imie; }
 std::string Pasazer::pobierzNazwisko() const { return nazwisko; }
-TypUlgi Pasazer::pobierzUlge() const { return ulga; }
 
 double Pasazer::pobierzMnoznikCeny() const {
     if (ulga == TypUlgi::STUDENT) return 0.49;

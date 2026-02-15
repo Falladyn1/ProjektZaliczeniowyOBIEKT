@@ -4,6 +4,6 @@
 class WagonBezprzedzialowy : public Wagon {
 public:
     WagonBezprzedzialowy(int _nr);
-    void generujMiejsca();
-    void wyswietlSchemat();
+    void generujMiejsca() override;
+    void wyswietlSchemat() override;
 };
