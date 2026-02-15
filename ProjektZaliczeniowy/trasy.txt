@@ -1,6 +1,60 @@
-IC_Neptun
+IC_Neptun 08:30
 5
 Warszawa Ilawa Malbork Gdansk Gdynia
-EIP_Poludnie
+EIP_Poludnie 10:15
 2
 Krakow Warszawa
+EIP_Krakus 16:40
+2
+Warszawa Krakow
+EIP_Polnoc 18:00
+3
+Gdynia Gdansk Warszawa
+EIC_Sobieski 10:00
+3
+Gdynia Warszawa Katowice
+EIC_Chrobry 06:30
+3
+Szczecin Poznan Warszawa
+TLK_Karpaty 12:00
+3
+Zakopane Krakow Warszawa
+TLK_Bieszczady 20:15
+4
+Przemysl Rzeszow Krakow Katowice
+TLK_Uznam 21:00
+6
+Warszawa Poznan Krzyz Stargard Szczecin Swinoujscie
+TLK_Malopolska 23:15
+5
+Gdynia Gdansk Warszawa Krakow Zakopane
+IC_Wawel 09:00
+5
+Krakow Katowice Opole Wroclaw Poznan
+IC_Odra 16:30
+4
+Wroclaw Opole Katowice Krakow
+IC_Silesia 13:10
+4
+Warszawa Koluszki Czestochowa Katowice
+REG_Warta 14:45
+4
+Poznan Konin Kutno Warszawa
+REG_Kamenczyk 07:45
+4
+Szklarska_Poreba Jelenia_Gora Walbrzych Wroclaw
+REG_Baltyk 08:00
+5
+Koszalin Slupsk Lebork Wejherowo Gdynia
+IC_Kopernik 11:20
+4
+Bydgoszcz Torun Wloclawek Warszawa
+IC_Sniezka 05:30
+5
+Wroclaw Leszno Poznan Gniezno Bydgoszcz
+IC_Mamry 09:45
+4
+Bialystok Gizycko Olsztyn Elblag
+TLK_Kociewie 15:20
+4
+Gorzow_Wlkp Pila Chojnice Tczew

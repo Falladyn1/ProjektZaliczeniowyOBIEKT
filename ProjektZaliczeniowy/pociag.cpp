@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Pociag::Pociag(string _nazwa, Trasa _trasa) : nazwa(_nazwa), trasa(_trasa) {}
+Pociag::Pociag(string _nazwa, string _godzina, Trasa _trasa) : nazwa(_nazwa), godzinaOdjazdu(_godzina), trasa(_trasa) {}
 
 Pociag::~Pociag() {
     for (auto w : wagony) delete w;
@@ -18,7 +18,7 @@ void Pociag::dodajWagon(Wagon* w) {
 
 void Pociag::pokazPodgladPociagu() {
     ustawKolor(KOLOR_ZOLTY);
-    cout << "POCIAG: " << nazwa << "\n";
+    cout << "POCIAG: " << nazwa << " | ODJAZD: " << godzinaOdjazdu << "\n";
     ustawKolor(KOLOR_RESET);
 
     trasa.wyswietlPrzebieg();
@@ -130,7 +130,7 @@ void Pociag::zapiszStanDoPliku() {
                 if (p->pobierzUlge() == TypUlgi::STUDENT) ulgaInt = 1;
                 if (p->pobierzUlge() == TypUlgi::SENIOR) ulgaInt = 2;
 
-                plik << w->pobierzNumer() << " " << m.pobierzNumer() << " "
+                plik << nazwa << " " << w->pobierzNumer() << " " << m.pobierzNumer() << " "
                     << p->pobierzImie() << " " << p->pobierzNazwisko() << " " << ulgaInt << "\n";
             }
         }
@@ -142,9 +142,16 @@ void Pociag::wczytajStanZPliku() {
     ifstream plik("baza_danych.txt");
     if (!plik.is_open()) return;
 
+    string wczytanaNazwa;
     int w, m, u;
     string imie, nazwisko;
-    while (plik >> w >> m >> imie >> nazwisko >> u) {
+
+    while (plik >> wczytanaNazwa >> w >> m >> imie >> nazwisko >> u) {
+
+        if (wczytanaNazwa != nazwa) {
+            continue;
+        }
+
         TypUlgi ulga = TypUlgi::NORMALNY;
         if (u == 1) ulga = TypUlgi::STUDENT;
         if (u == 2) ulga = TypUlgi::SENIOR;

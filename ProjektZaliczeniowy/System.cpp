@@ -6,7 +6,7 @@
 #include <iostream>
 #include <cstdlib> 
 #include <fstream> 
-#include <algorithm> // Do filtrowania unikalnych stacji
+#include <algorithm> 
 
 using namespace std;
 
@@ -22,24 +22,19 @@ System::~System() {
 }
 
 void System::inicjalizujDane() {
-    // Sprawdzamy, czy plik z trasami istnieje
-    ifstream plikSprawdz("trasy.txt");
-    if (!plikSprawdz.is_open()) {
-        // Jeœli nie, tworzymy go z domyœlnymi przyk³adowymi danymi
-        ofstream plikZapis("trasy.txt");
-        plikZapis << "IC_Neptun\n5\nWarszawa Ilawa Malbork Gdansk Gdynia\n";
-        plikZapis << "EIP_Poludnie\n2\nKrakow Warszawa\n";
-        plikZapis.close();
-    }
-    else {
-        plikSprawdz.close();
-    }
-
-    // W³aœciwe wczytywanie
     ifstream plikTras("trasy.txt");
-    string nazwaPociagu;
 
-    while (plikTras >> nazwaPociagu) {
+    if (!plikTras.is_open()) {
+        ustawKolor(KOLOR_CZERWONY);
+        cout << "KRYTYCZNY BLAD: Nie znaleziono pliku 'trasy.txt'!\n";
+        ustawKolor(KOLOR_RESET);
+        system("pause");
+        exit(1);
+    }
+
+    string nazwaPociagu, godzinaOdjazdu;
+
+    while (plikTras >> nazwaPociagu >> godzinaOdjazdu) {
         int liczbaStacji;
         plikTras >> liczbaStacji;
 
@@ -58,11 +53,10 @@ void System::inicjalizujDane() {
                 t.dodajStacje(s);
             }
 
-            Pociag* p = new Pociag(nazwaPociagu, t);
-            // Domyœlnie dla ka¿dego z pliku tworzymy 2 wagony
+            Pociag* p = new Pociag(nazwaPociagu, godzinaOdjazdu, t);
             p->dodajWagon(new WagonBezprzedzialowy(1));
             p->dodajWagon(new WagonPrzedzialowy(2));
-            p->wczytajStanZPliku(); // Z bazy rezerwacji
+            p->wczytajStanZPliku();
 
             pociagi.push_back(p);
             wyszukiwarka.dodajPociag(p);
@@ -82,10 +76,9 @@ void System::uruchom() {
         cout << "======================================\n";
         ustawKolor(KOLOR_RESET);
         cout << " [1] Znajdz polaczenie i kup bilet\n";
-        cout << " [2] Pokaz podglad wszystkich pociagow\n";
-        cout << " [3] Lista pasazerow (Administrator)\n";
-        cout << " [4] Zapisz stan systemu (Bilety)\n";
-        cout << " [5] Dostepne stacje\n";
+        cout << " [2] Lista pasazerow (Administrator)\n";
+        cout << " [3] Zapisz stan systemu (Bilety)\n";
+        cout << " [4] Dostepne stacje\n";
         cout << " [0] WYJSCIE\n";
         cout << "======================================\n";
         cout << " Wybor > ";
@@ -101,13 +94,9 @@ void System::uruchom() {
             break;
         case 2:
             system("cls");
-            for (auto p : pociagi) p->pokazPodgladPociagu();
-            break;
-        case 3:
-            system("cls");
             obslugaListyPasazerow();
             break;
-        case 4:
+        case 3:
         {
             ofstream plik("baza_danych.txt", ios::trunc);
             plik.close();
@@ -117,7 +106,7 @@ void System::uruchom() {
         cout << "Zapisano dane rezerwacji wszystkich pociagow!\n";
         ustawKolor(KOLOR_RESET);
         break;
-        case 5:
+        case 4:
             system("cls");
             wyswietlDostepneStacje();
             break;
@@ -154,7 +143,7 @@ void System::obslugaRezerwacji() {
     cout << "\nZnaleziono nastepujace polaczenia:\n";
     for (size_t i = 0; i < wyniki.size(); ++i) {
         ustawKolor(KOLOR_ZIELONY);
-        cout << " " << i + 1 << ". " << wyniki[i]->pobierzNazwe() << "\n";
+        cout << " " << i + 1 << ". " << wyniki[i]->pobierzNazwe() << " (Odjazd: " << wyniki[i]->pobierzGodzine() << ")\n";
         ustawKolor(KOLOR_RESET);
         wyniki[i]->pobierzTrase().wyswietlPrzebieg();
     }
@@ -192,7 +181,7 @@ void System::obslugaListyPasazerow() {
     cout << "\n--- LISTA PASAZEROW (ADMIN) ---\n";
     for (auto p : pociagi) {
         ustawKolor(KOLOR_ZOLTY);
-        cout << ">> Pociag: " << p->pobierzNazwe() << "\n";
+        cout << ">> Pociag: " << p->pobierzNazwe() << " (Odjazd: " << p->pobierzGodzine() << ")\n";
         ustawKolor(KOLOR_RESET);
         p->wyswietlListePasazerow();
         cout << "-------------------------------\n";
@@ -202,7 +191,6 @@ void System::obslugaListyPasazerow() {
 void System::wyswietlDostepneStacje() {
     vector<string> unikalneStacje;
 
-    // Zbieramy wszystkie stacje do jednego wektora (bez powtórzeñ)
     for (auto p : pociagi) {
         for (const auto& stacja : p->pobierzTrase().pobierzStacje()) {
             if (find(unikalneStacje.begin(), unikalneStacje.end(), stacja) == unikalneStacje.end()) {

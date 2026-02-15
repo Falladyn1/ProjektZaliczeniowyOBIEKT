@@ -18,15 +18,16 @@ public:
 
         for (auto p : pociagi) {
             const auto& stacje = p->pobierzTrase().pobierzStacje();
-            bool maSkad = false;
-            bool maDokad = false;
 
-            for (const auto& s : stacje) {
-                if (s == skad) maSkad = true;
-                if (s == dokad) maDokad = true;
+            int indeksSkad = -1;
+            int indeksDokad = -1;
+
+            for (int i = 0; i < (int)stacje.size(); ++i) {
+                if (stacje[i] == skad) indeksSkad = i;
+                if (stacje[i] == dokad) indeksDokad = i;
             }
 
-            if (maSkad && maDokad) {
+            if (indeksSkad != -1 && indeksDokad != -1 && indeksSkad < indeksDokad) {
                 znalezione.push_back(p);
             }
         }
