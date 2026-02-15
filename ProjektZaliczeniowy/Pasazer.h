@@ -2,18 +2,26 @@
 #include <string>
 #include <iostream>
 
-enum class TypUlgi { NORMALNY, STUDENT, SENIOR };
+using namespace std;
+
+enum TypUlgi { NORMALNY, STUDENT, SENIOR };
 
 class Pasazer {
 private:
-    std::string imie;
-    std::string nazwisko;
+    string imie;
+    string nazwisko;
     TypUlgi ulga;
+
 public:
-    Pasazer(std::string i, std::string n, TypUlgi u);
-    std::string pobierzImie() const;
-    std::string pobierzNazwisko() const;
-    TypUlgi pobierzUlge() const;
-    double pobierzMnoznikCeny() const;
-    friend std::ostream& operator<<(std::ostream& os, const Pasazer& p);
+    // Konstruktor
+    Pasazer(string i, string n, TypUlgi u);
+
+    // Gettery
+    string pobierzImie();
+    string pobierzNazwisko();
+    TypUlgi pobierzUlge();
+    double pobierzMnoznikCeny();
+
+    // Przeciazenie operatora wypisywania
+    friend ostream& operator<<(ostream& os, Pasazer& p);
 };

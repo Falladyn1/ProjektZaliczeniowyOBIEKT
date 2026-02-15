@@ -2,16 +2,16 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class Trasa {
 private:
-    std::string nazwaRelacji;
-    std::vector<std::string> stacje;
+    string nazwaRelacji;
+    vector<string> stacje;
 
 public:
-    Trasa(std::string nazwa = "Nieznana");
-
-    void dodajStacje(std::string nazwaStacji);
-    void wyswietlPrzebieg() const;
-
-    const std::vector<std::string>& pobierzStacje() const { return stacje; }
+    Trasa(string nazwa);
+    void dodajStacje(string nazwaStacji);
+    void wyswietlPrzebieg();
+    vector<string>& pobierzStacje();
 };

@@ -4,23 +4,29 @@
 
 using namespace std;
 
-Trasa::Trasa(std::string nazwa) : nazwaRelacji(nazwa) {}
+Trasa::Trasa(string nazwa) {
+    nazwaRelacji = nazwa;
+}
 
-void Trasa::dodajStacje(std::string nazwaStacji) {
+void Trasa::dodajStacje(string nazwaStacji) {
     stacje.push_back(nazwaStacji);
 }
 
-void Trasa::wyswietlPrzebieg() const {
-    cout << "RELACJA: " << nazwaRelacji << "\n";
-
+void Trasa::wyswietlPrzebieg() {
+    cout << "RELACJA: " << nazwaRelacji << endl;
     ustawKolor(KOLOR_NIEBIESKI);
-    for (size_t i = 0; i < stacje.size(); ++i) {
-        cout << "[ " << stacje[i] << " ]";
 
+    for (int i = 0; i < stacje.size(); i++) {
+        cout << "[ " << stacje[i] << " ]";
         if (i < stacje.size() - 1) {
             cout << " ===> ";
         }
     }
+
     ustawKolor(KOLOR_RESET);
-    cout << "\n\n";
+    cout << endl << endl;
+}
+
+vector<string>& Trasa::pobierzStacje() {
+    return stacje;
 }

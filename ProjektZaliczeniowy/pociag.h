@@ -4,22 +4,22 @@
 #include "Wagon.h"
 #include "Trasa.h"
 
+using namespace std;
+
 class Pociag {
 private:
-    std::string nazwa;
-    std::string godzinaOdjazdu; // NOWE
+    string nazwa;
+    string godzinaOdjazdu;
     Trasa trasa;
-    std::vector<Wagon*> wagony;
+    vector<Wagon*> wagony;
 
 public:
-    Pociag(std::string _nazwa, std::string _godzina, Trasa _trasa);
-    ~Pociag();
+    Pociag(string nazwa, string godzina, Trasa trasa);
+    ~Pociag(); // Destruktor do usuwania wagonow
 
     void dodajWagon(Wagon* w);
-
     void zarezerwujMiejsce(int nrWagonu, int nrMiejsca);
     void anulujRezerwacje(int nrWagonu, int nrMiejsca);
-    void znajdzWolneMiejsce(int tryb);
 
     void wyswietlListePasazerow();
     void pokazPodgladPociagu();
@@ -27,7 +27,7 @@ public:
     void zapiszStanDoPliku();
     void wczytajStanZPliku();
 
-    std::string pobierzNazwe() const { return nazwa; }
-    std::string pobierzGodzine() const { return godzinaOdjazdu; } // NOWE
-    const Trasa& pobierzTrase() const { return trasa; }
+    string pobierzNazwe();
+    string pobierzGodzine();
+    Trasa& pobierzTrase();
 };

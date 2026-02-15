@@ -1,20 +1,34 @@
 #include "Pasazer.h"
 
-Pasazer::Pasazer(std::string i, std::string n, TypUlgi u) : imie(i), nazwisko(n), ulga(u) {}
-
-std::string Pasazer::pobierzImie() const { return imie; }
-std::string Pasazer::pobierzNazwisko() const { return nazwisko; }
-TypUlgi Pasazer::pobierzUlge() const { return ulga; }
-
-double Pasazer::pobierzMnoznikCeny() const {
-    if (ulga == TypUlgi::STUDENT) return 0.49;
-    if (ulga == TypUlgi::SENIOR) return 0.70;
-    return 1.0;
+Pasazer::Pasazer(string i, string n, TypUlgi u) {
+    imie = i;
+    nazwisko = n;
+    ulga = u;
 }
 
-std::ostream& operator<<(std::ostream& os, const Pasazer& p) {
+string Pasazer::pobierzImie() { return imie; }
+string Pasazer::pobierzNazwisko() { return nazwisko; }
+TypUlgi Pasazer::pobierzUlge() { return ulga; }
+
+double Pasazer::pobierzMnoznikCeny() {
+    if (ulga == STUDENT) {
+        return 0.49;
+    }
+    else if (ulga == SENIOR) {
+        return 0.70;
+    }
+    else {
+        return 1.0;
+    }
+}
+
+ostream& operator<<(ostream& os, Pasazer& p) {
     os << p.imie << " " << p.nazwisko;
-    if (p.ulga == TypUlgi::STUDENT) os << " [ULGA -51%]";
-    else if (p.ulga == TypUlgi::SENIOR) os << " [ULGA -30%]";
+    if (p.ulga == STUDENT) {
+        os << " [ULGA -51%]";
+    }
+    else if (p.ulga == SENIOR) {
+        os << " [ULGA -30%]";
+    }
     return os;
 }

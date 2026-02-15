@@ -1,12 +1,9 @@
 #include "System.h"
-#include "Trasa.h"
 #include "WagonBezprzedzialowy.h"
 #include "WagonPrzedzialowy.h"
 #include "Wyjatki.h"
 #include <iostream>
-#include <cstdlib> 
-#include <fstream> 
-#include <algorithm> 
+#include <fstream>
 
 using namespace std;
 
@@ -15,8 +12,8 @@ System::System() {
 }
 
 System::~System() {
-    for (auto p : pociagi) {
-        delete p;
+    for (int i = 0; i < pociagi.size(); i++) {
+        delete pociagi[i];
     }
     pociagi.clear();
 }
@@ -24,102 +21,101 @@ System::~System() {
 void System::inicjalizujDane() {
     ifstream plikTras("trasy.txt");
 
-    if (!plikTras.is_open()) {
+    if (plikTras.good() == false) {
         ustawKolor(KOLOR_CZERWONY);
-        cout << "KRYTYCZNY BLAD: Nie znaleziono pliku 'trasy.txt'!\n";
+        cout << "KRYTYCZNY BLAD: Nie znaleziono pliku 'trasy.txt'!" << endl;
         ustawKolor(KOLOR_RESET);
-        system("pause");
         exit(1);
     }
 
-    string nazwaPociagu, godzinaOdjazdu;
-
-    while (plikTras >> nazwaPociagu >> godzinaOdjazdu) {
+    string nazwa, godzina;
+    while (plikTras >> nazwa >> godzina) {
         int liczbaStacji;
         plikTras >> liczbaStacji;
 
-        vector<string> nazwyStacji;
-        for (int i = 0; i < liczbaStacji; ++i) {
+        Trasa t(nazwa);
+        for (int i = 0; i < liczbaStacji; i++) {
             string stacja;
             plikTras >> stacja;
-            nazwyStacji.push_back(stacja);
+            t.dodajStacje(stacja);
         }
 
-        if (nazwyStacji.size() >= 2) {
-            string nazwaRelacji = nazwyStacji.front() + " -> " + nazwyStacji.back();
-            Trasa t(nazwaRelacji);
+        Pociag* p = new Pociag(nazwa, godzina, t);
 
-            for (const auto& s : nazwyStacji) {
-                t.dodajStacje(s);
-            }
+        Wagon* w1 = new WagonBezprzedzialowy(1);
+        Wagon* w2 = new WagonPrzedzialowy(2);
 
-            Pociag* p = new Pociag(nazwaPociagu, godzinaOdjazdu, t);
-            p->dodajWagon(new WagonBezprzedzialowy(1));
-            p->dodajWagon(new WagonPrzedzialowy(2));
-            p->wczytajStanZPliku();
+        p->dodajWagon(w1);
+        p->dodajWagon(w2);
+        p->wczytajStanZPliku();
 
-            pociagi.push_back(p);
-            wyszukiwarka.dodajPociag(p);
-        }
+        pociagi.push_back(p);
+        wyszukiwarka.dodajPociag(p);
     }
     plikTras.close();
 }
 
 void System::uruchom() {
     int opcja = -1;
-
     do {
         system("cls");
         ustawKolor(KOLOR_NIEBIESKI);
-        cout << "======================================\n";
-        cout << "      SYSTEM REZERWACJI KOLEJOWEJ     \n";
-        cout << "======================================\n";
+        cout << "======================================" << endl;
+        cout << "      SYSTEM REZERWACJI KOLEJOWEJ     " << endl;
+        cout << "======================================" << endl;
         ustawKolor(KOLOR_RESET);
-        cout << " [1] Znajdz polaczenie i kup bilet\n";
-        cout << " [2] Lista pasazerow (Administrator)\n";
-        cout << " [3] Zapisz stan systemu (Bilety)\n";
-        cout << " [4] Dostepne stacje\n";
-        cout << " [0] WYJSCIE\n";
-        cout << "======================================\n";
+        cout << " [1] Znajdz polaczenie i kup bilet" << endl;
+        cout << " [2] Anuluj rezerwacje" << endl; // NOWA OPCJA
+        cout << " [3] Lista pasazerow (Administrator)" << endl;
+        cout << " [4] Zapisz stan systemu (Bilety)" << endl;
+        cout << " [5] Dostepne stacje" << endl;
+        cout << " [0] WYJSCIE" << endl;
+        cout << "======================================" << endl;
         cout << " Wybor > ";
 
         if (!(cin >> opcja)) {
-            cin.clear(); cin.ignore(1000, '\n');
+            cin.clear();
+            cin.ignore(1000, '\n');
             continue;
         }
 
-        switch (opcja) {
-        case 1:
+        if (opcja == 1) {
             obslugaRezerwacji();
-            break;
-        case 2:
+        }
+        else if (opcja == 2) {
+            obslugaAnulowania(); // WYWOLANIE NOWEJ METODY
+        }
+        else if (opcja == 3) {
             system("cls");
             obslugaListyPasazerow();
-            break;
-        case 3:
-        {
-            ofstream plik("baza_danych.txt", ios::trunc);
-            plik.close();
         }
-        for (auto p : pociagi) p->zapiszStanDoPliku();
-        ustawKolor(KOLOR_ZIELONY);
-        cout << "Zapisano dane rezerwacji wszystkich pociagow!\n";
-        ustawKolor(KOLOR_RESET);
-        break;
-        case 4:
+        else if (opcja == 4) {
+            ofstream plik("baza_danych.txt", ios::trunc);
+            plik.close(); // Reset pliku
+
+            for (int i = 0; i < pociagi.size(); i++) {
+                pociagi[i]->zapiszStanDoPliku();
+            }
+
+            ustawKolor(KOLOR_ZIELONY);
+            cout << "Zapisano dane rezerwacji wszystkich pociagow!" << endl;
+            ustawKolor(KOLOR_RESET);
+        }
+        else if (opcja == 5) {
             system("cls");
             wyswietlDostepneStacje();
-            break;
-        case 0:
-            cout << "Do widzenia!\n";
-            break;
-        default:
-            cout << "Nieznana opcja.\n";
+        }
+        else if (opcja == 0) {
+            cout << "Do widzenia!" << endl;
+        }
+        else {
+            cout << "Nieznana opcja." << endl;
         }
 
         if (opcja != 0) {
-            cout << "\nNacisnij [Enter], aby wrocic do menu...";
-            cin.ignore(); cin.get();
+            cout << endl << "Nacisnij [Enter], aby wrocic do menu...";
+            cin.ignore();
+            cin.get();
         }
 
     } while (opcja != 0);
@@ -127,83 +123,138 @@ void System::uruchom() {
 
 void System::obslugaRezerwacji() {
     string skad, dokad;
-    cout << "\n--- WYSZUKIWANIE POLACZEN ---\n";
+    cout << endl << "--- WYSZUKIWANIE POLACZEN ---" << endl;
     cout << "Podaj stacje poczatkowa: "; cin >> skad;
     cout << "Podaj stacje koncowa:    "; cin >> dokad;
 
     vector<Pociag*> wyniki = wyszukiwarka.znajdzPolaczenia(skad, dokad);
 
-    if (wyniki.empty()) {
+    if (wyniki.size() == 0) {
         ustawKolor(KOLOR_CZERWONY);
-        cout << " [!] Brak bezposrednich polaczen na trasie " << skad << " -> " << dokad << ".\n";
+        cout << " [!] Brak polaczen na trasie " << skad << " -> " << dokad << "." << endl;
         ustawKolor(KOLOR_RESET);
         return;
     }
 
-    cout << "\nZnaleziono nastepujace polaczenia:\n";
-    for (size_t i = 0; i < wyniki.size(); ++i) {
+    cout << endl << "Znaleziono nastepujace polaczenia:" << endl;
+    for (int i = 0; i < wyniki.size(); i++) {
         ustawKolor(KOLOR_ZIELONY);
-        cout << " " << i + 1 << ". " << wyniki[i]->pobierzNazwe() << " (Odjazd: " << wyniki[i]->pobierzGodzine() << ")\n";
+        cout << " " << i + 1 << ". " << wyniki[i]->pobierzNazwe() << " (Odjazd: " << wyniki[i]->pobierzGodzine() << ")" << endl;
         ustawKolor(KOLOR_RESET);
-        wyniki[i]->pobierzTrase().wyswietlPrzebieg();
     }
 
-    int wyborPociagu;
-    cout << "Wybierz numer pociagu (0 aby anulowac): ";
-    cin >> wyborPociagu;
+    int wybor;
+    cout << endl << "Wybierz numer pociagu (0 aby anulowac): ";
+    cin >> wybor;
 
-    if (wyborPociagu > 0 && wyborPociagu <= (int)wyniki.size()) {
-        Pociag* wybrany = wyniki[wyborPociagu - 1];
-
+    if (wybor > 0 && wybor <= wyniki.size()) {
+        Pociag* wybrany = wyniki[wybor - 1];
         system("cls");
         wybrany->pokazPodgladPociagu();
 
         int w, m;
-        cout << "\n--- KUPNO BILETU ---\n";
+        cout << endl << "--- KUPNO BILETU ---" << endl;
         cout << "Numer wagonu: "; cin >> w;
         cout << "Numer miejsca: "; cin >> m;
 
         try {
             wybrany->zarezerwujMiejsce(w, m);
         }
-        catch (const exception& e) {
+        catch (BladRezerwacji& e) {
             ustawKolor(KOLOR_CZERWONY);
-            cout << "\nBLAD: " << e.what() << "\n";
+            cout << endl << "BLAD: " << e.what() << endl;
+            ustawKolor(KOLOR_RESET);
+        }
+        catch (BladDanych& e) {
+            ustawKolor(KOLOR_CZERWONY);
+            cout << endl << "BLAD: " << e.what() << endl;
             ustawKolor(KOLOR_RESET);
         }
     }
-    else {
-        cout << "Anulowano operacje.\n";
+}
+
+// NOWA METODA DO ANULOWANIA REZERWACJI
+void System::obslugaAnulowania() {
+    string nazwa;
+    int w, m;
+
+    cout << endl << "--- ANULOWANIE REZERWACJI ---" << endl;
+    cout << "Podaj nazwe pociagu (np. EIP_Poludnie): ";
+    cin >> nazwa;
+
+    Pociag* znalezionyPociag = nullptr;
+
+    // Klasyczne wyszukiwanie pociagu
+    for (int i = 0; i < pociagi.size(); i++) {
+        if (pociagi[i]->pobierzNazwe() == nazwa) {
+            znalezionyPociag = pociagi[i];
+            break; // Znalezlismy, wiec przerywamy petle
+        }
+    }
+
+    if (znalezionyPociag == nullptr) {
+        ustawKolor(KOLOR_CZERWONY);
+        cout << " [!] Nie znaleziono pociagu o takiej nazwie w systemie." << endl;
+        ustawKolor(KOLOR_RESET);
+        return;
+    }
+
+    cout << "Podaj numer wagonu: "; cin >> w;
+    cout << "Podaj numer miejsca: "; cin >> m;
+
+    try {
+        znalezionyPociag->anulujRezerwacje(w, m);
+    }
+    catch (BladRezerwacji& e) {
+        ustawKolor(KOLOR_CZERWONY);
+        cout << endl << "BLAD: " << e.what() << endl;
+        ustawKolor(KOLOR_RESET);
     }
 }
 
 void System::obslugaListyPasazerow() {
-    cout << "\n--- LISTA PASAZEROW (ADMIN) ---\n";
-    for (auto p : pociagi) {
+    cout << endl << "--- LISTA PASAZEROW (ADMIN) ---" << endl;
+    for (int i = 0; i < pociagi.size(); i++) {
         ustawKolor(KOLOR_ZOLTY);
-        cout << ">> Pociag: " << p->pobierzNazwe() << " (Odjazd: " << p->pobierzGodzine() << ")\n";
+        cout << ">> Pociag: " << pociagi[i]->pobierzNazwe() << " (Odjazd: " << pociagi[i]->pobierzGodzine() << ")" << endl;
         ustawKolor(KOLOR_RESET);
-        p->wyswietlListePasazerow();
-        cout << "-------------------------------\n";
+
+        pociagi[i]->wyswietlListePasazerow();
+        cout << "-------------------------------" << endl;
     }
 }
 
 void System::wyswietlDostepneStacje() {
-    vector<string> unikalneStacje;
+    vector<string> unikalne;
 
-    for (auto p : pociagi) {
-        for (const auto& stacja : p->pobierzTrase().pobierzStacje()) {
-            if (find(unikalneStacje.begin(), unikalneStacje.end(), stacja) == unikalneStacje.end()) {
-                unikalneStacje.push_back(stacja);
+    for (int i = 0; i < pociagi.size(); i++) {
+        vector<string> stacjePociagu = pociagi[i]->pobierzTrase().pobierzStacje();
+
+        for (int j = 0; j < stacjePociagu.size(); j++) {
+            string stacja = stacjePociagu[j];
+            bool jest = false;
+
+            // Reczne sprawdzanie czy stacja jest juz w unikalnych
+            for (int k = 0; k < unikalne.size(); k++) {
+                if (unikalne[k] == stacja) {
+                    jest = true;
+                    break;
+                }
+            }
+
+            if (jest == false) {
+                unikalne.push_back(stacja);
             }
         }
     }
 
     ustawKolor(KOLOR_ZOLTY);
-    cout << "\n=== LISTA DOSTEPNYCH STACJI W SYSTEMIE ===\n";
+    cout << endl << "=== LISTA DOSTEPNYCH STACJI ===" << endl;
     ustawKolor(KOLOR_RESET);
-    for (size_t i = 0; i < unikalneStacje.size(); ++i) {
-        cout << " - " << unikalneStacje[i] << "\n";
+
+    for (int i = 0; i < unikalne.size(); i++) {
+        cout << " - " << unikalne[i] << endl;
     }
-    cout << "==========================================\n";
+
+    cout << "===============================" << endl;
 }

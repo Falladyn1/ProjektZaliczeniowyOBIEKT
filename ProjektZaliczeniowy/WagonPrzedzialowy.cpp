@@ -5,32 +5,38 @@
 
 using namespace std;
 
-WagonPrzedzialowy::WagonPrzedzialowy(int _nr) : Wagon(_nr, 100.0) {
+WagonPrzedzialowy::WagonPrzedzialowy(int nr) : Wagon(nr, 100.0) {
     generujMiejsca();
 }
 
 void WagonPrzedzialowy::generujMiejsca() {
-    for (int i = 1; i <= 30; ++i) {
-        TypMiejsca typ = SRODEK;
-        if (i % 6 == 1 || i % 6 == 0) typ = OKNO;
-        siedzenia.push_back(Miejsce(i, typ, cenaZaMiejsce));
+    for (int i = 1; i <= 30; i++) {
+        TypMiejsca typ;
+        if (i % 6 == 1 || i % 6 == 0) {
+            typ = OKNO;
+        }
+        else {
+            typ = SRODEK;
+        }
+
+        Miejsce noweMiejsce(i, typ, cenaZaMiejsce);
+        siedzenia.push_back(noweMiejsce);
     }
 }
 
 void WagonPrzedzialowy::wyswietlSchemat() {
-    cout << "Wagon " << numerWagonu << " (Przedzialowy):\n";
+    cout << "Wagon " << numerWagonu << " (Przedzialowy):" << endl;
+    int iloscPrzedzialow = siedzenia.size() / 6;
 
-    int iloscPrzedzialow = (int)siedzenia.size() / 6;
-
-    for (int p = 0; p < iloscPrzedzialow; ++p) {
+    for (int p = 0; p < iloscPrzedzialow; p++) {
         int start = p * 6;
         cout << " P" << p + 1 << " ";
 
-        for (int i = 0; i < 3; ++i) {
-            int idx = start + i;
-            if (siedzenia[idx].czyWolne()) {
+        // Gorny rzad
+        for (int i = 0; i < 3; i++) {
+            if (siedzenia[start + i].czyWolne() == true) {
                 ustawKolor(KOLOR_ZIELONY);
-                cout << "[" << setw(2) << siedzenia[idx].pobierzNumer() << "]";
+                cout << "[" << setw(2) << siedzenia[start + i].pobierzNumer() << "]";
             }
             else {
                 ustawKolor(KOLOR_CZERWONY);
@@ -38,13 +44,13 @@ void WagonPrzedzialowy::wyswietlSchemat() {
             }
             ustawKolor(KOLOR_RESET);
         }
-        cout << "\n    ";
+        cout << endl << "    ";
 
-        for (int i = 5; i >= 3; --i) {
-            int idx = start + i;
-            if (siedzenia[idx].czyWolne()) {
+        // Dolny rzad (tylem do kierunku)
+        for (int i = 5; i >= 3; i--) {
+            if (siedzenia[start + i].czyWolne() == true) {
                 ustawKolor(KOLOR_ZIELONY);
-                cout << "[" << setw(2) << siedzenia[idx].pobierzNumer() << "]";
+                cout << "[" << setw(2) << siedzenia[start + i].pobierzNumer() << "]";
             }
             else {
                 ustawKolor(KOLOR_CZERWONY);
@@ -52,6 +58,6 @@ void WagonPrzedzialowy::wyswietlSchemat() {
             }
             ustawKolor(KOLOR_RESET);
         }
-        cout << "\n\n";
+        cout << endl << endl;
     }
 }

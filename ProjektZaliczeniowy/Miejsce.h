@@ -9,14 +9,17 @@ private:
     TypMiejsca rodzaj;
     double cenaBazowa;
     Pasazer* pasazer;
+
 public:
     Miejsce(int nr, TypMiejsca r, double cena);
-    ~Miejsce();
-    bool czyWolne() const;
-    int pobierzNumer() const;
-    TypMiejsca pobierzRodzaj() const;
-    Pasazer* pobierzPasazera() const;
-    double obliczCeneKoncowa() const;
+    ~Miejsce(); // Destruktor
+
+    bool czyWolne();
+    int pobierzNumer();
+    TypMiejsca pobierzRodzaj();
+    Pasazer* pobierzPasazera();
+    double obliczCeneKoncowa();
+
     void zarezerwuj(Pasazer* p);
     void zwolnij();
 };

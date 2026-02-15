@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <iostream>
 #include "Pociag.h"
 #include "Wyszukiwarka.h"
 
@@ -11,12 +10,12 @@ private:
 
     void inicjalizujDane();
     void obslugaRezerwacji();
+    void obslugaAnulowania(); // Nowa metoda
     void obslugaListyPasazerow();
     void wyswietlDostepneStacje();
 
 public:
     System();
     ~System();
-
     void uruchom();
 };

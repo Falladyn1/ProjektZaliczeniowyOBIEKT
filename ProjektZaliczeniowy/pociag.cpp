@@ -5,10 +5,15 @@
 
 using namespace std;
 
-Pociag::Pociag(string _nazwa, string _godzina, Trasa _trasa) : nazwa(_nazwa), godzinaOdjazdu(_godzina), trasa(_trasa) {}
+Pociag::Pociag(string n, string g, Trasa t) : trasa(t) {
+    nazwa = n;
+    godzinaOdjazdu = g;
+}
 
 Pociag::~Pociag() {
-    for (auto w : wagony) delete w;
+    for (int i = 0; i < wagony.size(); i++) {
+        delete wagony[i];
+    }
     wagony.clear();
 }
 
@@ -18,24 +23,27 @@ void Pociag::dodajWagon(Wagon* w) {
 
 void Pociag::pokazPodgladPociagu() {
     ustawKolor(KOLOR_ZOLTY);
-    cout << "POCIAG: " << nazwa << " | ODJAZD: " << godzinaOdjazdu << "\n";
+    cout << "POCIAG: " << nazwa << " | ODJAZD: " << godzinaOdjazdu << endl;
     ustawKolor(KOLOR_RESET);
 
     trasa.wyswietlPrzebieg();
 
-    for (auto w : wagony) {
-        w->wyswietlSchemat();
-        cout << "\n";
+    for (int i = 0; i < wagony.size(); i++) {
+        wagony[i]->wyswietlSchemat();
+        cout << endl;
     }
 }
 
 void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
-    for (auto w : wagony) {
-        if (w->pobierzNumer() == nrWagonu) {
-            for (auto& m : w->pobierzMiejsca()) {
-                if (m.pobierzNumer() == nrMiejsca) {
-                    if (!m.czyWolne()) {
-                        throw BladRezerwacji("To miejsce jest juz zajete!");
+    // Podwojna petla - typowe na laboratoriach z wektorami klas
+    for (int i = 0; i < wagony.size(); i++) {
+        if (wagony[i]->pobierzNumer() == nrWagonu) {
+
+            for (int j = 0; j < wagony[i]->pobierzMiejsca().size(); j++) {
+                if (wagony[i]->pobierzMiejsca()[j].pobierzNumer() == nrMiejsca) {
+
+                    if (wagony[i]->pobierzMiejsca()[j].czyWolne() == false) {
+                        throw BladRezerwacji("Miejsce jest juz zajete!");
                     }
 
                     string imie, nazwisko;
@@ -43,76 +51,66 @@ void Pociag::zarezerwujMiejsce(int nrWagonu, int nrMiejsca) {
                     cout << "Imie: "; cin >> imie;
                     cout << "Nazwisko: "; cin >> nazwisko;
                     cout << "Ulga (1-Student, 2-Senior, 0-Brak): ";
+
                     if (!(cin >> wyborUlgi)) {
                         cin.clear(); cin.ignore(1000, '\n');
                         throw BladDanych("Nieprawidlowy format ulgi!");
                     }
 
-                    TypUlgi ulga = TypUlgi::NORMALNY;
-                    if (wyborUlgi == 1) ulga = TypUlgi::STUDENT;
-                    else if (wyborUlgi == 2) ulga = TypUlgi::SENIOR;
+                    TypUlgi ulga;
+                    if (wyborUlgi == 1) ulga = STUDENT;
+                    else if (wyborUlgi == 2) ulga = SENIOR;
+                    else ulga = NORMALNY;
 
-                    m.zarezerwuj(new Pasazer(imie, nazwisko, ulga));
+                    Pasazer* nowyPasazer = new Pasazer(imie, nazwisko, ulga);
+                    wagony[i]->pobierzMiejsca()[j].zarezerwuj(nowyPasazer);
+
                     ustawKolor(KOLOR_ZIELONY);
-                    cout << "SUKCES: Miejsce zostalo zarezerwowane.\n";
+                    cout << "SUKCES: Miejsce zarezerwowane." << endl;
                     ustawKolor(KOLOR_RESET);
                     return;
                 }
             }
-            throw BladRezerwacji("Brak miejsca o numerze " + to_string(nrMiejsca));
+            throw BladRezerwacji("Brak miejsca o numerze " + to_string(nrMiejsca) + "\n");
         }
     }
-    throw BladRezerwacji("Brak wagonu o numerze " + to_string(nrWagonu));
+    throw BladRezerwacji("Brak wagonu o numerze " + to_string(nrWagonu) + "\n");
 }
 
 void Pociag::anulujRezerwacje(int nrWagonu, int nrMiejsca) {
-    for (auto w : wagony) {
-        if (w->pobierzNumer() == nrWagonu) {
-            for (auto& m : w->pobierzMiejsca()) {
-                if (m.pobierzNumer() == nrMiejsca) {
-                    if (m.czyWolne()) {
+    for (int i = 0; i < wagony.size(); i++) {
+        if (wagony[i]->pobierzNumer() == nrWagonu) {
+
+            for (int j = 0; j < wagony[i]->pobierzMiejsca().size(); j++) {
+                if (wagony[i]->pobierzMiejsca()[j].pobierzNumer() == nrMiejsca) {
+
+                    if (wagony[i]->pobierzMiejsca()[j].czyWolne() == true) {
                         throw BladRezerwacji("To miejsce jest juz wolne!");
                     }
-                    m.zwolnij();
+
+                    wagony[i]->pobierzMiejsca()[j].zwolnij();
                     ustawKolor(KOLOR_ZIELONY);
-                    cout << "Rezerwacja anulowana.\n";
+                    cout << "Rezerwacja anulowana." << endl;
                     ustawKolor(KOLOR_RESET);
                     return;
                 }
             }
-            throw BladRezerwacji("Brak miejsca o numerze " + to_string(nrMiejsca));
+            throw BladRezerwacji("Brak miejsca o numerze " + to_string(nrMiejsca) + "\n");
         }
     }
-    throw BladRezerwacji("Brak wagonu o numerze " + to_string(nrWagonu));
-}
-
-void Pociag::znajdzWolneMiejsce(int tryb) {
-    TypMiejsca szukany = (tryb == 1) ? OKNO : SRODEK;
-    cout << "Szukam...\n";
-
-    for (auto w : wagony) {
-        for (const auto& m : w->pobierzMiejsca()) {
-            bool pasuje = (m.pobierzRodzaj() == szukany);
-            if (tryb == 2 && m.pobierzRodzaj() != OKNO) pasuje = true;
-
-            if (m.czyWolne() && pasuje) {
-                ustawKolor(KOLOR_ZOLTY);
-                cout << "ZNALEZIONO: Wagon " << w->pobierzNumer() << " Miejsce " << m.pobierzNumer() << "\n";
-                ustawKolor(KOLOR_RESET);
-                return;
-            }
-        }
-    }
-    cout << "Brak miejsc tego typu.\n";
+    throw BladRezerwacji("Brak wagonu o numerze " + to_string(nrWagonu) + "\n");
 }
 
 void Pociag::wyswietlListePasazerow() {
-    cout << "--- LISTA PASAZEROW ---\n";
-    for (auto w : wagony) {
-        for (const auto& m : w->pobierzMiejsca()) {
-            if (!m.czyWolne()) {
-                cout << "Wagon " << w->pobierzNumer() << " M " << m.pobierzNumer() << " | ";
-                cout << *(m.pobierzPasazera()) << "\n";
+    for (int i = 0; i < wagony.size(); i++) {
+        for (int j = 0; j < wagony[i]->pobierzMiejsca().size(); j++) {
+
+            if (wagony[i]->pobierzMiejsca()[j].czyWolne() == false) {
+                cout << "Wagon " << wagony[i]->pobierzNumer() << " M "
+                    << wagony[i]->pobierzMiejsca()[j].pobierzNumer() << " | ";
+
+                Pasazer* p = wagony[i]->pobierzMiejsca()[j].pobierzPasazera();
+                cout << *p << endl;
             }
         }
     }
@@ -120,18 +118,22 @@ void Pociag::wyswietlListePasazerow() {
 
 void Pociag::zapiszStanDoPliku() {
     ofstream plik("baza_danych.txt", ios::app);
-    if (!plik.is_open()) return;
+    if (plik.is_open() == false) return;
 
-    for (auto w : wagony) {
-        for (const auto& m : w->pobierzMiejsca()) {
-            if (!m.czyWolne()) {
-                Pasazer* p = m.pobierzPasazera();
+    for (int i = 0; i < wagony.size(); i++) {
+        for (int j = 0; j < wagony[i]->pobierzMiejsca().size(); j++) {
+
+            if (wagony[i]->pobierzMiejsca()[j].czyWolne() == false) {
+                Pasazer* p = wagony[i]->pobierzMiejsca()[j].pobierzPasazera();
+
                 int ulgaInt = 0;
-                if (p->pobierzUlge() == TypUlgi::STUDENT) ulgaInt = 1;
-                if (p->pobierzUlge() == TypUlgi::SENIOR) ulgaInt = 2;
+                if (p->pobierzUlge() == STUDENT) ulgaInt = 1;
+                else if (p->pobierzUlge() == SENIOR) ulgaInt = 2;
 
-                plik << nazwa << " " << w->pobierzNumer() << " " << m.pobierzNumer() << " "
-                    << p->pobierzImie() << " " << p->pobierzNazwisko() << " " << ulgaInt << "\n";
+                plik << nazwa << " " << wagony[i]->pobierzNumer() << " "
+                    << wagony[i]->pobierzMiejsca()[j].pobierzNumer() << " "
+                    << p->pobierzImie() << " " << p->pobierzNazwisko() << " "
+                    << ulgaInt << endl;
             }
         }
     }
@@ -140,27 +142,27 @@ void Pociag::zapiszStanDoPliku() {
 
 void Pociag::wczytajStanZPliku() {
     ifstream plik("baza_danych.txt");
-    if (!plik.is_open()) return;
+    if (plik.is_open() == false) return;
 
-    string wczytanaNazwa;
+    string wNazwa, imie, nazwisko;
     int w, m, u;
-    string imie, nazwisko;
 
-    while (plik >> wczytanaNazwa >> w >> m >> imie >> nazwisko >> u) {
-
-        if (wczytanaNazwa != nazwa) {
-            continue;
+    while (plik >> wNazwa >> w >> m >> imie >> nazwisko >> u) {
+        if (wNazwa != nazwa) {
+            continue; // Pomijamy jak to nie ten pociag
         }
 
-        TypUlgi ulga = TypUlgi::NORMALNY;
-        if (u == 1) ulga = TypUlgi::STUDENT;
-        if (u == 2) ulga = TypUlgi::SENIOR;
+        TypUlgi ulga;
+        if (u == 1) ulga = STUDENT;
+        else if (u == 2) ulga = SENIOR;
+        else ulga = NORMALNY;
 
-        for (auto wag : wagony) {
-            if (wag->pobierzNumer() == w) {
-                for (auto& mies : wag->pobierzMiejsca()) {
-                    if (mies.pobierzNumer() == m) {
-                        mies.zarezerwuj(new Pasazer(imie, nazwisko, ulga));
+        for (int i = 0; i < wagony.size(); i++) {
+            if (wagony[i]->pobierzNumer() == w) {
+                for (int j = 0; j < wagony[i]->pobierzMiejsca().size(); j++) {
+                    if (wagony[i]->pobierzMiejsca()[j].pobierzNumer() == m) {
+                        Pasazer* nowyPasazer = new Pasazer(imie, nazwisko, ulga);
+                        wagony[i]->pobierzMiejsca()[j].zarezerwuj(nowyPasazer);
                     }
                 }
             }
@@ -168,3 +170,7 @@ void Pociag::wczytajStanZPliku() {
     }
     plik.close();
 }
+
+string Pociag::pobierzNazwe() { return nazwa; }
+string Pociag::pobierzGodzine() { return godzinaOdjazdu; }
+Trasa& Pociag::pobierzTrase() { return trasa; }

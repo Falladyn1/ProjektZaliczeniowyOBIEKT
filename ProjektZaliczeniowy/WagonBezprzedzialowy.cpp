@@ -5,22 +5,29 @@
 
 using namespace std;
 
-WagonBezprzedzialowy::WagonBezprzedzialowy(int _nr) : Wagon(_nr, 60.0) {
+WagonBezprzedzialowy::WagonBezprzedzialowy(int nr) : Wagon(nr, 60.0) {
     generujMiejsca();
 }
 
 void WagonBezprzedzialowy::generujMiejsca() {
-    for (int i = 1; i <= 40; ++i) {
-        TypMiejsca typ = KORYTARZ;
-        if (i % 4 == 1 || i % 4 == 0) typ = OKNO;
-        siedzenia.push_back(Miejsce(i, typ, cenaZaMiejsce));
+    for (int i = 1; i <= 40; i++) {
+        TypMiejsca typ;
+        if (i % 4 == 1 || i % 4 == 0) {
+            typ = OKNO;
+        }
+        else {
+            typ = KORYTARZ;
+        }
+
+        Miejsce noweMiejsce(i, typ, cenaZaMiejsce);
+        siedzenia.push_back(noweMiejsce);
     }
 }
 
 void WagonBezprzedzialowy::wyswietlSchemat() {
-    cout << "Wagon " << numerWagonu << " (Bezprzedzialowy):\n";
-    for (size_t i = 0; i < siedzenia.size(); ++i) {
-        if (siedzenia[i].czyWolne()) {
+    cout << "Wagon " << numerWagonu << " (Bezprzedzialowy):" << endl;
+    for (int i = 0; i < siedzenia.size(); i++) {
+        if (siedzenia[i].czyWolne() == true) {
             ustawKolor(KOLOR_ZIELONY);
             cout << "[" << setw(2) << siedzenia[i].pobierzNumer() << "]";
         }
@@ -30,8 +37,15 @@ void WagonBezprzedzialowy::wyswietlSchemat() {
         }
         ustawKolor(KOLOR_RESET);
 
-        if ((i + 1) % 4 == 0) cout << "\n";
-        else if ((i + 1) % 2 == 0) cout << "   ";
-        else cout << " ";
+        // Formatowanie wyswietlania
+        if ((i + 1) % 4 == 0) {
+            cout << endl;
+        }
+        else if ((i + 1) % 2 == 0) {
+            cout << "   ";
+        }
+        else {
+            cout << " ";
+        }
     }
 }

@@ -3,7 +3,7 @@
 
 class WagonPrzedzialowy : public Wagon {
 public:
-    WagonPrzedzialowy(int _nr);
-    void generujMiejsca() override;
-    void wyswietlSchemat() override;
+    WagonPrzedzialowy(int nr);
+    void generujMiejsca();
+    void wyswietlSchemat();
 };

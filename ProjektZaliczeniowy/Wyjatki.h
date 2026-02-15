@@ -1,7 +1,9 @@
 #pragma once
-#include <windows.h> 
+#include <windows.h>
 #include <stdexcept>
 #include <string>
+
+using namespace std;
 
 #define KOLOR_RESET   7
 #define KOLOR_ZIELONY 10
@@ -14,13 +16,13 @@ inline void ustawKolor(int k) {
     SetConsoleTextAttribute(hConsole, k);
 }
 
-// Proste klasy wyj¹tków
-class BladRezerwacji : public std::runtime_error {
+// Moje klasy wyjatkow do obslugi bledow
+class BladRezerwacji : public runtime_error {
 public:
-    BladRezerwacji(const std::string& wiadomosc) : std::runtime_error(wiadomosc) {}
+    BladRezerwacji(string wiadomosc) : runtime_error(wiadomosc) {}
 };
 
-class BladDanych : public std::runtime_error {
+class BladDanych : public runtime_error {
 public:
-    BladDanych(const std::string& wiadomosc) : std::runtime_error(wiadomosc) {}
+    BladDanych(string wiadomosc) : runtime_error(wiadomosc) {}
 };
